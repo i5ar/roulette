@@ -8,6 +8,35 @@ class Root extends React.Component {
         super(props);
         this.state = {
             questions: [
+
+                {
+                    difficulty: 2,  // 0-5
+                    title: {
+                        text: "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?",
+                    },
+                    answers: [
+                        {
+                            text: "giallo",
+                        },
+                        {
+                            text: "blu",
+                        },
+                    ],
+                },
+                {
+                    difficulty: 1,
+                    title: {
+                        text: "Seleziona i quesiti veri."
+                    },
+                    answers: [
+                        {
+                            text: "Il rosso è un colore primario della tricromia",
+                        },
+                        {
+                            text: "Il blu è un colore primario della tricromia",
+                        },
+                    ],
+                },
                 {
                     difficulty: 3,
                     title: {
@@ -22,41 +51,9 @@ class Root extends React.Component {
                     },
                     answers: [],
                 },
-                {
-                    difficulty: 2,  // 0-5
-                    title: {
-                        text: "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?",
-                    },
-                    answers: [
-                        {
-                            text: "giallo",
-                            correct: true,
-                        },
-                        {
-                            text: "blu",
-                            correct: false,
-                        },
-                    ],
-                },
-                {
-                    difficulty: 1,
-                    title: {
-                        text: "Seleziona i quesiti veri."
-                    },
-                    answers: [
-                        {
-                            text: "Il rosso è un colore primario della tricromia",
-                            correct: true,
-                        },
-                        {
-                            text: "Il blu è un colore primario della tricromia",
-                            correct: true,
-                        },
-                    ],
-                },
-     
+
             ],
-            item: 0,
+            currentQuestionIndex: 0,
             currentAnswers: [],
             questionsAnswered: [
                 // {
@@ -76,18 +73,23 @@ class Root extends React.Component {
             questionsAnswered: [
                 ...prevState.questionsAnswered,
                 {
-                    titleAnswered: prevState.questions[prevState.item].title.text,
+                    titleAnswered: prevState.questions[prevState.currentQuestionIndex].title.text,
                     answersAnswered: prevState.currentAnswers
                 }
             ],
-            item: prevState.item + 1,
+            currentQuestionIndex: prevState.currentQuestionIndex + 1,
+            currentAnswers: []
         }))
     }
 
     handleChangeCallback(evt) {
         if (evt.target.type === "checkbox") {
-            console.log("checkboxed");
-
+            const answer = evt.target.value;
+            const answerVal = evt.target.value;
+            const answerChecked = evt.target.checked;
+            this.setState(prevState => ({
+                currentAnswers: answerChecked ? prevState.currentAnswers.concat(answerVal) : prevState.currentAnswers.filter(val => val !== answerVal)
+            }));
         }
         if (evt.target.type === "text") {
             const answer = evt.target.value;
@@ -98,54 +100,31 @@ class Root extends React.Component {
     }
 
     render() {
-        // const element = () => {
-        //     if (this.state.questions[this.state.item].answers == "") {
-        //         return e(
-        //             Textarea,
-        //             {
-        //                 item: this.state.item
-        //             }
-        //         );
-
-        //     } else if (this.state.questions[this.state.item].answers != "") {
-        //         return e(Checkbox,
-        //             {
-        //                 item: this.state.item,
-        //                 answers: this.state.questions[this.state.item].answers,
-        //                 handleChangeCallback: this.handleChangeCallback
-        //             }
-        //         );
-        //     }
-        // }
-
-        return e(
+        return this.state.currentQuestionIndex < this.state.questions.length ? e(
             "section",
             {},
             e(
                 "h2",
                 {},
-                this.state.questions[this.state.item].title.text
+                this.state.questions[this.state.currentQuestionIndex].title.text
             ),
             e(
                 "form",
                 {},
-                this.state.questions[this.state.item].answers == "" ? e(
+                this.state.questions[this.state.currentQuestionIndex].answers == "" ? e(
                     Text,
                     {
-                        item: this.state.item,
                         handleChangeCallback: this.handleChangeCallback,
                         currentAnswers: this.state.currentAnswers,
                     }
                 ) : e(
                     Checkbox,
                     {
-                        item: this.state.item,
-                        answers: this.state.questions[this.state.item].answers,
+                        answers: this.state.questions[this.state.currentQuestionIndex].answers,
                         handleChangeCallback: this.handleChangeCallback,
+                        currentAnswers: this.state.currentAnswers,
                     }
                 ),
-
-                // Submit
                 e(
                     Submit,
                     {
@@ -153,7 +132,7 @@ class Root extends React.Component {
                     }
                 ),
             ),
-        );
+        ) : e("div", {}, "Hai finito!")
     }
 }
 

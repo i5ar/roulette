@@ -13,7 +13,7 @@ export default class Text extends React.Component {
             "input",
             {
                 type: "text",
-                value: this.props.currentAnswers[0],
+                value: this.props.currentAnswers[0] || "",
                 onChange: this.onChange
             }
         );

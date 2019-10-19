@@ -16,8 +16,8 @@ export default class Checkbox extends React.Component {
                     "input",
                     {
                         type: "checkbox",
-                        name: i,
-                        value: i,
+                        value: answer.text,
+                        checked: this.props.currentAnswers.includes(answer.text),
                         onChange: this.onChange
                     }
                 ),
