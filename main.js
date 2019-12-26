@@ -67,6 +67,8 @@ class Root extends React.Component {
     }
 
     componentDidMount() {
+        window.addEventListener("blur", this.onBlur)
+
         fetch('questions.json').then(
             response => response.json().then(
                 data => this.setState({
@@ -78,6 +80,18 @@ class Root extends React.Component {
         ).catch(err => {
             console.log(err);
         });
+    }
+
+    componentWilUnmount() {
+        window.removeEventListener("blur", this.onBlur)
+    }
+
+    onBlur = () => {
+        // https://stackoverflow.com/questions/24393785/prevent-user-from-going-to-other-tab-on-website
+        alert("Each time you leave the page you skip to the next question.");
+        this.setState(s => ({
+            currentQuestionIndex: s.currentQuestionIndex + 1
+        }))
     }
 
     handleClickCallback(evt) {
