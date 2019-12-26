@@ -16,12 +16,12 @@ export default class Checkbox extends React.Component {
                     "input",
                     {
                         type: "checkbox",
-                        value: answer.text,
-                        checked: this.props.currentAnswers.includes(answer.text),
+                        value: answer,
+                        checked: this.props.currentAnswers.includes(answer),
                         onChange: this.onChange
                     }
                 ),
-                answer.text,
+                answer,
             )
         )
     }

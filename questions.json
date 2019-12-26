@@ -1,44 +1,28 @@
 [
     {
         "difficulty": 2,
-        "title": {
-            "text": "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?"
-        },
+        "title": "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?",
         "answers": [
-            {
-                "text": "giallo"
-            },
-            {
-                "text": "blu"
-            }
+            "giallo",
+            "blu"
         ]
     },
     {
         "difficulty": 1,
-        "title": {
-            "text": "Seleziona i quesiti veri."
-        },
+        "title": "Seleziona i quesiti veri.",
         "answers": [
-            {
-                "text": "Il rosso è un colore primario della tricromia"
-            },
-            {
-                "text": "Il blu è un colore primario della tricromia"
-            }
+            "Il rosso è un colore primario della tricromia",
+            "Il blu è un colore primario della tricromia"
         ]
     },
     {
         "difficulty": 3,
-        "title": {
-            "text": "Esponi la differenza tra HTTP e HTTPS."
-        },
+        "title": "Esponi la differenza tra HTTP e HTTPS.",
         "answers": []
     },
     {
         "difficulty": 1,
-        "title": {
-            "text": "Esponi la differenza tra head e body."
-        },
+        "title": "Esponi la differenza tra head e body.",
         "answers": []
     }
 ]
