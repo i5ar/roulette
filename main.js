@@ -7,52 +7,52 @@ class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            questions: [
+            questions: [],
 
-                {
-                    difficulty: 2,  // 0-5
-                    title: {
-                        text: "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?",
-                    },
-                    answers: [
-                        {
-                            text: "giallo",
-                        },
-                        {
-                            text: "blu",
-                        },
-                    ],
-                },
-                {
-                    difficulty: 1,
-                    title: {
-                        text: "Seleziona i quesiti veri."
-                    },
-                    answers: [
-                        {
-                            text: "Il rosso è un colore primario della tricromia",
-                        },
-                        {
-                            text: "Il blu è un colore primario della tricromia",
-                        },
-                    ],
-                },
-                {
-                    difficulty: 3,
-                    title: {
-                        text: "Esponi la differenza tra HTTP e HTTPS."
-                    },
-                    answers: [],
-                },
-                {
-                    difficulty: 1,
-                    title: {
-                        text: "Esponi la differenza tra head e body."
-                    },
-                    answers: [],
-                },
-
-            ],
+            // questions: [
+            //     {
+            //         difficulty: 2,  // 0-5
+            //         title: {
+            //             text: "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?",
+            //         },
+            //         answers: [
+            //             {
+            //                 text: "giallo",
+            //             },
+            //             {
+            //                 text: "blu",
+            //             },
+            //         ],
+            //     },
+            //     {
+            //         difficulty: 1,
+            //         title: {
+            //             text: "Seleziona i quesiti veri."
+            //         },
+            //         answers: [
+            //             {
+            //                 text: "Il rosso è un colore primario della tricromia",
+            //             },
+            //             {
+            //                 text: "Il blu è un colore primario della tricromia",
+            //             },
+            //         ],
+            //     },
+            //     {
+            //         difficulty: 3,
+            //         title: {
+            //             text: "Esponi la differenza tra HTTP e HTTPS."
+            //         },
+            //         answers: [],
+            //     },
+            //     {
+            //         difficulty: 1,
+            //         title: {
+            //             text: "Esponi la differenza tra head e body."
+            //         },
+            //         answers: [],
+            //     },
+            // ],
             currentQuestionIndex: 0,
             currentAnswers: [],
             questionsAnswered: [
@@ -65,7 +65,20 @@ class Root extends React.Component {
         this.handleClickCallback = this.handleClickCallback.bind(this);
         this.handleChangeCallback = this.handleChangeCallback.bind(this);
     }
-    componentDidMount() {}
+
+    componentDidMount() {
+        fetch('questions.json').then(
+            response => response.json().then(
+                data => this.setState({
+                    questions: data
+                })
+            ).catch(err => {
+                console.log(err);
+            })
+        ).catch(err => {
+            console.log(err);
+        });
+    }
 
     handleClickCallback(evt) {
         console.log("Submitted");
