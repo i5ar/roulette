@@ -42,6 +42,19 @@ class Root extends React.Component {
         ).catch(err => {
             console.log(err);
         });
+
+
+
+                // Countdown
+                // if (this.state.ready) {
+                //     const countdownNumberEl = document.getElementById('countdown-number');
+                //     let countdown = time;
+                //     countdownNumberEl.textContent = countdown;
+                //     setInterval(() => {
+                //         countdown = --countdown <= 0 ? time : countdown;
+                //         countdownNumberEl.textContent = countdown;
+                //     }, 1000);
+                // }
     }
 
     componentWilUnmount() {
@@ -131,13 +144,24 @@ class Root extends React.Component {
     }
 
     render() {
+        const {
+            ready,
+            scholar,
+            questions,
+            currentAnswers,
+            currentQuestionIndex
+        } = this.state;
+
+        const width = 128;
+        const strokeWidth = 32;
+        const time = questions[currentQuestionIndex] ? questions[currentQuestionIndex].time : 0;
 
         const grades = ["2A", "2B", "4A", "4B", "5A", "5B"];
 
         return e(
             f,
             {},
-            !this.state.ready ? e(
+            !ready ? e(
                 "form",
                 {
                     onSubmit: (evt) => this.handleSubmit(evt)
@@ -158,7 +182,7 @@ class Root extends React.Component {
                                     }
                                 }))
                             },
-                            value: this.state.scholar.name || "",
+                            value: scholar.name || "",
                             required: true
                         }
                     ),
@@ -176,7 +200,7 @@ class Root extends React.Component {
                                     }
                                 }))
                             },
-                            value: this.state.scholar.surname || "",
+                            value: scholar.surname || "",
                             required: true
                         }
                     ),
@@ -184,10 +208,6 @@ class Root extends React.Component {
                     e(
                         "select",
                         {
-                            style: {
-                                clear: "both",
-                                float: "left"
-                            },
                             onChange: evt => {
                                 const value = evt.target.value;
                                 this.setState(s => ({
@@ -197,7 +217,7 @@ class Root extends React.Component {
                                     }
                                 }))
                             },
-                            value: this.state.scholar.grade || "",
+                            value: scholar.grade || "",
                             required: true
                         },
                         e("option", {value: null}, ""),
@@ -212,33 +232,30 @@ class Root extends React.Component {
                         }
                     )
                 ),
-           
-            )
-
-            : this.state.currentQuestionIndex < this.state.questions.length ? e(
+            ) : currentQuestionIndex < questions.length ? e(
                 "section",
                 {},
                 e(
                     "h2",
                     {},
-                    this.state.questions[this.state.currentQuestionIndex].title + `
-                    (PUNTI ${this.state.questions[this.state.currentQuestionIndex].difficulty})`
+                    questions[currentQuestionIndex].title + `
+                    (PUNTI ${questions[currentQuestionIndex].level})`
                 ),
                 e(
                     "form",
                     {},
-                    this.state.questions[this.state.currentQuestionIndex].answers.length === 0 ? e(
+                    questions[currentQuestionIndex].answers.length === 0 ? e(
                         Text,
                         {
                             handleChangeCallback: this.handleChangeCallback,
-                            currentAnswers: this.state.currentAnswers,
+                            currentAnswers,
                         }
                     ) : e(
                         Checkbox,
                         {
-                            answers: this.state.questions[this.state.currentQuestionIndex].answers,
+                            answers: questions[currentQuestionIndex].answers,
                             handleChangeCallback: this.handleChangeCallback,
-                            currentAnswers: this.state.currentAnswers,
+                            currentAnswers,
                         }
                     ),
                     e(
@@ -248,10 +265,46 @@ class Root extends React.Component {
                         }
                     ),
                 ),
-            ) : e("div", {}, this.endRoulette())
 
+
+                e(
+                    "figure",
+                    {
+                        key: this.state.currentQuestionIndex
+                    },
+                    e("figcaption", {
+                        style: {
+                            color: "var(--base08)",
+                            display: "inline-block",
+                            lineHeight: "var(--width)"
+                        },
+                        id: "countdown-number"
+                    }),
+                    e(
+                        "svg",
+                        {},
+                        e(
+                            "circle",
+                            {
+                                style: {
+                                    // fill: "none",
+                                    // stroke: "var(--base08)",
+                                    // strokeWidth: "var(--stroke-width)",
+                                    animation: `countdown ${time}s linear infinite forwards`
+                                },
+                                r: width / 2 - strokeWidth,
+                                cx: width / 2,
+                                cy: width / 2,
+                            }
+                        ),
+
+
+                    )
+                )
+
+
+            ) : e("div", {}, this.endRoulette()),
         )
-
     }
 }
 

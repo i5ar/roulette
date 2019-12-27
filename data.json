@@ -1,6 +1,7 @@
 [
     {
-        "difficulty": 2,
+        "time": 6,
+        "level": 2,
         "title": "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?",
         "answers": [
             "giallo",
@@ -8,7 +9,8 @@
         ]
     },
     {
-        "difficulty": 1,
+        "time": 5,
+        "level": 1,
         "title": "Seleziona i quesiti veri.",
         "answers": [
             "Il rosso è un colore primario della tricromia",
@@ -16,12 +18,14 @@
         ]
     },
     {
-        "difficulty": 3,
+        "time": 18,
+        "level": 3,
         "title": "Esponi la differenza tra HTTP e HTTPS.",
         "answers": []
     },
     {
-        "difficulty": 1,
+        "time": 17,
+        "level": 1,
         "title": "Esponi la differenza tra head e body.",
         "answers": []
     }
