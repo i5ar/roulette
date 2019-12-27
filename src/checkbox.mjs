@@ -9,19 +9,19 @@ export default class Checkbox extends React.Component {
     }
 
     render() {
-        return this.props.answers.map((answer, i) => e(
+        return this.props.choiceSet.map((answer, i) => e(
                 "label",
                 {},
                 e(
                     "input",
                     {
                         type: "checkbox",
-                        value: answer,
-                        checked: this.props.currentAnswers.includes(answer),
+                        value: answer.choiceText,
+                        checked: this.props.currentAnswers.includes(answer.choiceText),
                         onChange: this.onChange
                     }
                 ),
-                answer,
+                answer.choiceText,
             )
         )
     }

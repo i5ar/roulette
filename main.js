@@ -20,8 +20,8 @@ class Root extends React.Component {
             },
             questionsAnswered: [
                 // {
-                //     title: "",
-                //     answers: []
+                //     questionText: "",
+                //     choiceSet: [{choiceText: ""}]
                 // }
             ]
         };
@@ -58,8 +58,8 @@ class Root extends React.Component {
             //     questionsAnswered: [
             //         ...prevState.questionsAnswered,
             //         {
-            //             title: prevState.questions[prevState.currentQuestionIndex].title,
-            //             answers: prevState.currentAnswers
+            //             questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
+            //             choiceSet: prevState.currentAnswers
             //         }
             //     ],
             //     currentQuestionIndex: prevState.currentQuestionIndex + 1,
@@ -94,8 +94,8 @@ class Root extends React.Component {
             questionsAnswered: [
                 ...prevState.questionsAnswered,
                 {
-                    title: prevState.questions[prevState.currentQuestionIndex].title,
-                    answers: prevState.currentAnswers
+                    questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
+                    choiceSet: prevState.currentAnswers
                 }
             ],
             currentQuestionIndex: prevState.currentQuestionIndex + 1,
@@ -151,8 +151,8 @@ class Root extends React.Component {
                 questionsAnswered: [
                     ...prevState.questionsAnswered,
                     {
-                        title: prevState.questions[prevState.currentQuestionIndex].title,
-                        answers: prevState.currentAnswers
+                        questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
+                        choiceSet: prevState.currentAnswers
                     }
                 ],
                 currentQuestionIndex: prevState.currentQuestionIndex + 1,
@@ -258,13 +258,13 @@ class Root extends React.Component {
                 e(
                     "h2",
                     {},
-                    questions[currentQuestionIndex].title + `
+                    questions[currentQuestionIndex].questionText + `
                     (PUNTI ${questions[currentQuestionIndex].level})`
                 ),
                 e(
                     "form",
                     {},
-                    questions[currentQuestionIndex].answers.length === 0 ? e(
+                    questions[currentQuestionIndex].choiceSet.length === 0 ? e(
                         Text,
                         {
                             handleChangeCallback: this.handleChangeCallback,
@@ -273,7 +273,7 @@ class Root extends React.Component {
                     ) : e(
                         Checkbox,
                         {
-                            answers: questions[currentQuestionIndex].answers,
+                            choiceSet: questions[currentQuestionIndex].choiceSet,
                             handleChangeCallback: this.handleChangeCallback,
                             currentAnswers,
                         }
