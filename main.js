@@ -44,17 +44,6 @@ class Root extends React.Component {
             console.log(err);
         });
 
-
-        // Countdown
-        // if (this.state.ready) {
-        //     const countdownNumberEl = document.getElementById('countdown-number');
-        //     let countdown = time;
-        //     countdownNumberEl.textContent = countdown;
-        //     setInterval(() => {
-        //         countdown = --countdown <= 0 ? time : countdown;
-        //         countdownNumberEl.textContent = countdown;
-        //     }, 1000);
-        // }
     }
 
     componentWilUnmount() {
@@ -81,6 +70,13 @@ class Root extends React.Component {
         }
     }
 
+    countDown(count) {
+        if (!this.state.complete) {
+            const countdownNumberEl = document.getElementById('countdown-number');
+            countdownNumberEl.textContent = parseInt(count, 10);
+        }
+    }
+
     handleSubmit(evt) {
         evt.preventDefault();
         // NOTE: Hide scholar form and set time for the first question.
@@ -89,7 +85,7 @@ class Root extends React.Component {
             time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0,
         }), () => setInterval(() => this.setState(prevState => ({
             time: prevState.time > 0 ? prevState.time - 1 : 0
-        }), () => this.state.time <= 0 ? this.nextQuestion() : console.log(this.state.time)
+        }), () => this.state.time <= 0 ? this.nextQuestion() : this.countDown(this.state.time)
         ), 1000));
     }
 
@@ -106,7 +102,7 @@ class Root extends React.Component {
             currentAnswers: [],
             complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
             time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
-        }));
+        }), () => this.countDown(this.state.time));
     }
 
     handleChangeCallback(evt) {
@@ -163,7 +159,7 @@ class Root extends React.Component {
                 currentAnswers: [],
                 complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
                 time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
-            }));
+            }), () => this.countDown(this.state.time));
         }
     }
 
