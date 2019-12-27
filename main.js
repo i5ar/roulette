@@ -7,16 +7,16 @@ class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            ready: false,
+            complete: false,
             questions: [],
             currentQuestionIndex: 0,
             currentAnswers: [],
-            credits: [
-                // {
+            scholar: {
                 //     name: "",
                 //     surname: "",
                 //     grade: "",
-                // }
-            ],
+            },
             questionsAnswered: [
                 // {
                 //     title: "",
@@ -49,11 +49,22 @@ class Root extends React.Component {
     }
 
     onBlur = () => {
-        // https://stackoverflow.com/questions/24393785/prevent-user-from-going-to-other-tab-on-website
-        // alert("Each time you leave the page you skip to the next question.");
-        // this.setState(s => ({
-        //     currentQuestionIndex: s.currentQuestionIndex + 1
-        // }))
+        if (this.state.ready && !this.state.complete) {
+            // https://stackoverflow.com/questions/24393785/prevent-user-from-going-to-other-tab-on-website
+            alert("Ogni volta che lasci la pagina salti una domanda.");
+            this.setState(prevState => ({
+                currentQuestionIndex: prevState.currentQuestionIndex + 1,
+                complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length
+            }))
+        }
+    }
+
+    handleSubmit(evt) {
+        evt.preventDefault();
+        // NOTE: Hide scholar form.
+        this.setState(prevState => ({
+            ready: !prevState.ready
+        }))
     }
 
     handleClickCallback(evt) {
@@ -66,7 +77,8 @@ class Root extends React.Component {
                 }
             ],
             currentQuestionIndex: prevState.currentQuestionIndex + 1,
-            currentAnswers: []
+            currentAnswers: [],
+            complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length
         }))
     }
 
@@ -102,16 +114,12 @@ class Root extends React.Component {
     }
 
     endRoulette() {
+        // TODO: Send data.
 
-        if (this.state.questions.length) {
-            // TODO: Send data.
+        // NOTE: Download file.
+        // this.downloadFile()
 
-            // NOTE: Download file.
-            // this.downloadFile()
-
-            return "Hai finito!";
-        }
-        return "Are you ready?";
+        return "Hai finito";
     }
 
     render() {
@@ -121,42 +129,85 @@ class Root extends React.Component {
         return e(
             f,
             {},
-            e(
+            !this.state.ready ? e(
                 "form",
-                {},
+                {
+                    onSubmit: (evt) => this.handleSubmit(evt)
+                },
                 e("fieldset", {},
-                    e("label", {}, "nome"),
+                    e("legend", {}, "Studente"),
+                    e("label", {}, "Nome"),
                     e(
                         "input",
                         {
                             type: "text",
-                            value: "",
-                            onChange: ""
+                            onChange: evt => {
+                                const value = evt.target.value;
+                                this.setState(s => ({
+                                    scholar: {
+                                        ...s.scholar,
+                                        name: value || null
+                                    }
+                                }))
+                            },
+                            value: this.state.scholar.name || "",
+                            required: true
                         }
                     ),
-                    e("label", {}, "cognome"),
+                    e("label", {}, "Cognome"),
                     e(
                         "input",
                         {
                             type: "text",
-                            value: "",
-                            onChange: ""
+                            onChange: evt => {
+                                const value = evt.target.value;
+                                this.setState(s => ({
+                                    scholar: {
+                                        ...s.scholar,
+                                        surname: value || null
+                                    }
+                                }))
+                            },
+                            value: this.state.scholar.surname || "",
+                            required: true
                         }
                     ),
-                    e("label", {}, "classe"),
+                    e("label", {}, "Classe"),
                     e(
                         "select",
                         {
                             style: {
                                 clear: "both",
                                 float: "left"
-                            }
-                        }, grades.map(c => e("option", {value: c}, c))
+                            },
+                            onChange: evt => {
+                                const value = evt.target.value;
+                                this.setState(s => ({
+                                    scholar: {
+                                        ...s.scholar,
+                                        grade: value || null
+                                    }
+                                }))
+                            },
+                            value: this.state.scholar.grade || "",
+                            required: true
+                        },
+                        e("option", {value: null}, ""),
+                        grades.map(c => e("option", {
+                            value: c
+                        }, c))
                     ),
-                )
-            ),
+                    e(
+                        "input", {
+                            type: "submit",
+                            value: "Submit",
+                        }
+                    )
+                ),
+           
+            )
 
-            this.state.currentQuestionIndex < this.state.questions.length ? e(
+            : this.state.currentQuestionIndex < this.state.questions.length ? e(
                 "section",
                 {},
                 e(
