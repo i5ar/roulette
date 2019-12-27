@@ -31,7 +31,7 @@ class Root extends React.Component {
     componentDidMount() {
         window.addEventListener("blur", this.onBlur)
 
-        fetch('questions.json').then(
+        fetch('data.json').then(
             response => response.json().then(
                 data => this.setState({
                     questions: data
@@ -51,11 +51,19 @@ class Root extends React.Component {
     onBlur = () => {
         if (this.state.ready && !this.state.complete) {
             // https://stackoverflow.com/questions/24393785/prevent-user-from-going-to-other-tab-on-website
-            alert("Ogni volta che lasci la pagina salti una domanda.");
-            this.setState(prevState => ({
-                currentQuestionIndex: prevState.currentQuestionIndex + 1,
-                complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length
-            }))
+            // alert("Ogni volta che lasci la pagina salti una domanda.");
+            // this.setState(prevState => ({
+            //     questionsAnswered: [
+            //         ...prevState.questionsAnswered,
+            //         {
+            //             title: prevState.questions[prevState.currentQuestionIndex].title,
+            //             answers: prevState.currentAnswers
+            //         }
+            //     ],
+            //     currentQuestionIndex: prevState.currentQuestionIndex + 1,
+            //     currentAnswers: [],
+            //     complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length
+            // }))
         }
     }
 
