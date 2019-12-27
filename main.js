@@ -95,7 +95,7 @@ class Root extends React.Component {
                 ...prevState.questionsAnswered,
                 {
                     questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
-                    choiceSet: prevState.currentAnswers
+                    choiceSet: prevState.currentAnswers.map(answer => ({choiceText: answer}))
                 }
             ],
             currentQuestionIndex: prevState.currentQuestionIndex + 1,
@@ -152,7 +152,7 @@ class Root extends React.Component {
                     ...prevState.questionsAnswered,
                     {
                         questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
-                        choiceSet: prevState.currentAnswers
+                        choiceSet: prevState.currentAnswers.map(answer => ({choiceText: answer}))
                     }
                 ],
                 currentQuestionIndex: prevState.currentQuestionIndex + 1,
