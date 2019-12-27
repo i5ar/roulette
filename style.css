@@ -17,7 +17,8 @@
     --base0E: #8959a8;
     --base0F: #a3685a;
 
-    
+    --font: 'Courier Prime', monospace;
+
     /* Countdown */
     --width: 128px;
     --stroke-width: 32px;
@@ -27,13 +28,38 @@
     --stroke-dasharray: calc(var(--PI) * var(--d));  /* 113px; */
 }
 
+body {
+    font-family: var(--font);
+}
+
+h1 {
+    text-align: center;
+}
+fieldset {
+    margin: auto;
+    width: min-content;
+}
+
 label,
 input,
 select {
     float: left;
     clear: both;
+    padding: 0.4rem 0;
 }
 
+select,
+input[type=submit] {
+    width: 100%;
+}
+
+input[type=submit] {
+    margin: 1rem 0 0;
+}
+
+section input[type=text] {
+    width: 100%;
+}
 
 /* Countdown */
 figure {
