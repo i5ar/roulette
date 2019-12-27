@@ -7,6 +7,7 @@ class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            time: 0,
             ready: false,
             complete: false,
             questions: [],
@@ -44,17 +45,16 @@ class Root extends React.Component {
         });
 
 
-
-                // Countdown
-                // if (this.state.ready) {
-                //     const countdownNumberEl = document.getElementById('countdown-number');
-                //     let countdown = time;
-                //     countdownNumberEl.textContent = countdown;
-                //     setInterval(() => {
-                //         countdown = --countdown <= 0 ? time : countdown;
-                //         countdownNumberEl.textContent = countdown;
-                //     }, 1000);
-                // }
+        // Countdown
+        // if (this.state.ready) {
+        //     const countdownNumberEl = document.getElementById('countdown-number');
+        //     let countdown = time;
+        //     countdownNumberEl.textContent = countdown;
+        //     setInterval(() => {
+        //         countdown = --countdown <= 0 ? time : countdown;
+        //         countdownNumberEl.textContent = countdown;
+        //     }, 1000);
+        // }
     }
 
     componentWilUnmount() {
@@ -75,17 +75,22 @@ class Root extends React.Component {
             //     ],
             //     currentQuestionIndex: prevState.currentQuestionIndex + 1,
             //     currentAnswers: [],
-            //     complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length
+            //     complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
+            //     time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
             // }))
         }
     }
 
     handleSubmit(evt) {
         evt.preventDefault();
-        // NOTE: Hide scholar form.
+        // NOTE: Hide scholar form and set time for the first question.
         this.setState(prevState => ({
-            ready: !prevState.ready
-        }))
+            ready: !prevState.ready,
+            time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0,
+        }), () => setInterval(() => this.setState(prevState => ({
+            time: prevState.time > 0 ? prevState.time - 1 : 0
+        }), () => this.state.time <= 0 ? this.nextQuestion() : console.log(this.state.time)
+        ), 1000));
     }
 
     handleClickCallback(evt) {
@@ -99,8 +104,9 @@ class Root extends React.Component {
             ],
             currentQuestionIndex: prevState.currentQuestionIndex + 1,
             currentAnswers: [],
-            complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length
-        }))
+            complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
+            time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
+        }));
     }
 
     handleChangeCallback(evt) {
@@ -143,6 +149,24 @@ class Root extends React.Component {
         return "Hai finito";
     }
 
+    nextQuestion() {
+        if (!this.state.complete) {
+            this.setState(prevState => ({
+                questionsAnswered: [
+                    ...prevState.questionsAnswered,
+                    {
+                        title: prevState.questions[prevState.currentQuestionIndex].title,
+                        answers: prevState.currentAnswers
+                    }
+                ],
+                currentQuestionIndex: prevState.currentQuestionIndex + 1,
+                currentAnswers: [],
+                complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
+                time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
+            }));
+        }
+    }
+
     render() {
         const {
             ready,
@@ -175,9 +199,9 @@ class Root extends React.Component {
                             type: "text",
                             onChange: evt => {
                                 const value = evt.target.value;
-                                this.setState(s => ({
+                                this.setState(prevState => ({
                                     scholar: {
-                                        ...s.scholar,
+                                        ...prevState.scholar,
                                         name: value || null
                                     }
                                 }))
@@ -193,9 +217,9 @@ class Root extends React.Component {
                             type: "text",
                             onChange: evt => {
                                 const value = evt.target.value;
-                                this.setState(s => ({
+                                this.setState(prevState => ({
                                     scholar: {
-                                        ...s.scholar,
+                                        ...prevState.scholar,
                                         surname: value || null
                                     }
                                 }))
@@ -210,9 +234,9 @@ class Root extends React.Component {
                         {
                             onChange: evt => {
                                 const value = evt.target.value;
-                                this.setState(s => ({
+                                this.setState(prevState => ({
                                     scholar: {
-                                        ...s.scholar,
+                                        ...prevState.scholar,
                                         grade: value || null
                                     }
                                 }))

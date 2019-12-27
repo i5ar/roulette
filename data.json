@@ -1,6 +1,6 @@
 [
     {
-        "time": 6,
+        "time": 3,
         "level": 2,
         "title": "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?",
         "answers": [
@@ -9,7 +9,7 @@
         ]
     },
     {
-        "time": 5,
+        "time": 3,
         "level": 1,
         "title": "Seleziona i quesiti veri.",
         "answers": [
@@ -18,13 +18,13 @@
         ]
     },
     {
-        "time": 18,
+        "time": 3,
         "level": 3,
         "title": "Esponi la differenza tra HTTP e HTTPS.",
         "answers": []
     },
     {
-        "time": 17,
+        "time": 6,
         "level": 1,
         "title": "Esponi la differenza tra head e body.",
         "answers": []
