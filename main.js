@@ -142,7 +142,7 @@ class Root extends React.Component {
         // NOTE: Download file.
         // this.downloadFile()
 
-        return "Hai finito!";
+        return e("p", {}, "Hai finito!");
     }
 
     nextQuestion() {

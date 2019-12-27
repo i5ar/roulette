@@ -32,9 +32,17 @@ body {
     font-family: var(--font);
 }
 
-h1 {
+header,
+main {
+    max-width: 960px;
+    margin: auto;
+}
+
+h1,
+p {
     text-align: center;
 }
+
 fieldset {
     margin: auto;
     width: min-content;
