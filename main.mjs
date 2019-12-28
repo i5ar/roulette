@@ -160,9 +160,9 @@ class Root extends React.Component {
     }
 
     async downloadFile() {
-        const {questionsAnswered} = this.state;
+        const {questionsAnswered, scholar} = this.state;
         const fileName = "file";
-        const json = JSON.stringify(questionsAnswered);
+        const json = JSON.stringify({scholar, questionsAnswered});
         const blob = new Blob([json], {type: "application/json"});
         const href = await URL.createObjectURL(blob);
         const link = document.createElement("a");
