@@ -28,6 +28,7 @@ class Root extends React.Component {
                 // }
             ]
         };
+        this.interval;
         this.handleChangeCallback = this.handleChangeCallback.bind(this);
     }
 
@@ -56,7 +57,7 @@ class Root extends React.Component {
         }).then(
             response => response.json().then(
                 query => this.setState({
-                    questions: shuffle(query.data.quiz.questions),
+                    questions: query.data.quiz.questions,
                     unit: query.data.quiz.unit
                 })
             ).catch(err => {
@@ -69,7 +70,7 @@ class Root extends React.Component {
         // fetch('data.json').then(
         //     response => response.json().then(
         //         query => this.setState({
-        //             questions: shuffle(query.data.quiz.questions),
+        //             questions: query.data.quiz.questions,
         //             unit: query.data.quiz.unit
         //         })
         //     ).catch(err => {
@@ -138,15 +139,16 @@ class Root extends React.Component {
                 prevState => ({
                     isReady: !prevState.isReady,
                     time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0,
-                }), () => setInterval(() => this.setState(prevState => ({
-                    time: prevState.time > 0 ? prevState.time - 1 : 0
-                }),
-                () => this.state.time <= 0 ?
-                this.nextQuestion() :
-                // this.countDown(this.state.time)
-                console.log(this.state.time)
-            ), 1000)
-        );
+                }), () => this.interval = setInterval(() => this.setState(
+                    prevState => ({
+                        time: prevState.time > 0 ? prevState.time - 1 : 0
+                    }),
+                    () => this.state.time <= 0 ?
+                    this.nextQuestion() :
+                    // this.countDown(this.state.time)
+                    console.log(this.state.time)
+                ), 1000)
+            );
         }
     }
 
@@ -187,7 +189,7 @@ class Root extends React.Component {
             );
         } else {
             console.log("hi");
-            
+            clearInterval(this.interval);
         }
     }
 
