@@ -1,44 +1,47 @@
 {
     "data": {
-        "questions": [
-            {
-                "time": 3,
-                "level": 2,
-                "questionText": "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?",
-                "choiceSet": [
-                    {
-                        "choiceText": "giallo"
-                    },
-                    {
-                        "choiceText": "blu"
-                    }
-                ]
-            },
-            {
-                "time": 3,
-                "level": 1,
-                "questionText": "Seleziona i quesiti veri.",
-                "choiceSet": [
-                    {
-                        "choiceText": "Il rosso è un colore primario della tricromia"
-                    },
-                    {
-                        "choiceText": "Il blu è un colore primario della tricromia"
-                    }
-                ]
-            },
-            {
-                "time": 3,
-                "level": 3,
-                "questionText": "Esponi la differenza tra HTTP e HTTPS.",
-                "choiceSet": []
-            },
-            {
-                "time": 3,
-                "level": 1,
-                "questionText": "Esponi la differenza tra head e body.",
-                "choiceSet": []
-            }
-        ]
+        "quiz": {
+            "unit": "Colore",
+            "questions": [
+                {
+                    "time": 3,
+                    "level": 2,
+                    "questionText": "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?",
+                    "choiceSet": [
+                        {
+                            "choiceText": "giallo"
+                        },
+                        {
+                            "choiceText": "blu"
+                        }
+                    ]
+                },
+                {
+                    "time": 3,
+                    "level": 1,
+                    "questionText": "Seleziona i quesiti veri.",
+                    "choiceSet": [
+                        {
+                            "choiceText": "Il rosso è un colore primario della tricromia"
+                        },
+                        {
+                            "choiceText": "Il blu è un colore primario della tricromia"
+                        }
+                    ]
+                },
+                {
+                    "time": 3,
+                    "level": 3,
+                    "questionText": "Esponi la differenza tra HTTP e HTTPS.",
+                    "choiceSet": []
+                },
+                {
+                    "time": 3,
+                    "level": 1,
+                    "questionText": "Esponi la differenza tra head e body.",
+                    "choiceSet": []
+                }
+            ]
+        }
     }
 }

@@ -7,6 +7,7 @@ class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            unit: "",
             time: 0,
             ready: false,
             complete: false,
@@ -38,18 +39,25 @@ class Root extends React.Component {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({query: `{
-                questions {
-                  time
-                  level
-                  questionText
-                  choiceSet {
-                    choiceText
-                  }
+                quiz(id: 1) {
+                    id
+                    unit
+                    questions {
+                        time
+                        level
+                        questionText
+                        choiceSet {
+                            choiceText
+                        }
+                    }
                 }
-              }`})
+            }`})
         }).then(
             response => response.json().then(
-                query => this.setState({questions: query.data.questions})
+                query => this.setState({
+                    questions: query.data.quiz.questions,
+                    unit: query.data.quiz.unit
+                })
             ).catch(err => {
                 console.log(err);
             })
@@ -60,7 +68,8 @@ class Root extends React.Component {
         // fetch('data.json').then(
         //     response => response.json().then(
         //         query => this.setState({
-        //             questions: query.data.questions
+        //             questions: query.data.quiz.questions,
+        //             unit: query.data.quiz.unit
         //         })
         //     ).catch(err => {
         //         console.log(err);
