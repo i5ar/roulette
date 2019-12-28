@@ -9,10 +9,11 @@ class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isDown: false,
             unit: "",
             time: 0,
-            ready: false,
-            complete: false,
+            isReady: false,
+            isComplete: false,
             questions: [],
             currentQuestionIndex: 0,
             currentAnswers: [],
@@ -87,7 +88,7 @@ class Root extends React.Component {
     }
 
     onBlur = () => {
-        if (this.state.ready && !this.state.complete) {
+        if (this.state.isReady && !this.state.isComplete) {
             // https://stackoverflow.com/questions/24393785/prevent-user-from-going-to-other-tab-on-website
             // alert("Ogni volta che lasci la pagina salti una domanda.");
             // this.setState(prevState => ({
@@ -100,14 +101,14 @@ class Root extends React.Component {
             //     ],
             //     currentQuestionIndex: prevState.currentQuestionIndex + 1,
             //     currentAnswers: [],
-            //     complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
+            //     isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
             //     time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
             // }))
         }
     }
 
     countDown(count) {
-        if (!this.state.complete) {
+        if (!this.state.isComplete) {
             const countdownNumberEl = document.getElementById('countdown-number');
             countdownNumberEl.textContent = parseInt(count, 10);
         }
@@ -117,7 +118,7 @@ class Root extends React.Component {
         evt.preventDefault();
         // NOTE: Hide scholar form and set time for the first question.
         this.setState(prevState => ({
-            ready: !prevState.ready,
+            isReady: !prevState.isReady,
             time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0,
         }), () => setInterval(() => this.setState(prevState => ({
             time: prevState.time > 0 ? prevState.time - 1 : 0
@@ -136,7 +137,7 @@ class Root extends React.Component {
             ],
             currentQuestionIndex: prevState.currentQuestionIndex + 1,
             currentAnswers: [],
-            complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
+            isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
             time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
         }), () => this.countDown(this.state.time));
     }
@@ -172,17 +173,8 @@ class Root extends React.Component {
         document.body.removeChild(link);
     }
 
-    endRoulette() {
-        // TODO: Send data.
-
-        // NOTE: Download file.
-        // this.downloadFile()
-
-        return e("p", {}, "Hai finito!");
-    }
-
     nextQuestion() {
-        if (!this.state.complete) {
+        if (!this.state.isComplete) {
             this.setState(prevState => ({
                 questionsAnswered: [
                     ...prevState.questionsAnswered,
@@ -193,15 +185,26 @@ class Root extends React.Component {
                 ],
                 currentQuestionIndex: prevState.currentQuestionIndex + 1,
                 currentAnswers: [],
-                complete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
+                isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
                 time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
             }), () => this.countDown(this.state.time));
+        } else {
+            if (!this.state.isDown) {
+                // TODO: Send data.
+
+                this.setState({
+                    isDown: true
+                }, () => {
+                    // NOTE: Download file.
+                    this.downloadFile();
+                })
+            }
         }
     }
 
     render() {
         const {
-            ready,
+            isReady,
             scholar,
             questions,
             currentAnswers,
@@ -217,7 +220,7 @@ class Root extends React.Component {
         return e(
             f,
             {},
-            !ready ? e(
+            !isReady ? e(
                 "form",
                 {
                     onSubmit: (evt) => this.handleSubmit(evt)
@@ -358,8 +361,11 @@ class Root extends React.Component {
                     )
                 )
 
-
-            ) : e("div", {}, this.endRoulette()),
+            ) : e(
+                "div",
+                {},
+                e("p", {}, "Hai finito!")
+            )
         )
     }
 }
