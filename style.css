@@ -53,7 +53,8 @@ input,
 select {
     float: left;
     clear: both;
-    padding: 0.4rem 0;
+    padding: 0.4rem;
+    box-sizing: border-box;
 }
 
 select,
@@ -67,6 +68,12 @@ input[type=submit] {
 
 section input[type=text] {
     width: 100%;
+}
+
+button {
+    margin: 0 auto;
+    display: block;
+    padding: 0.4rem;
 }
 
 /* Countdown */

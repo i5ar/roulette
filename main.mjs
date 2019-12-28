@@ -2,14 +2,13 @@ import Checkbox from "./src/checkbox.mjs";
 import Submit from "./src/submit.mjs";
 import Text from "./src/text.mjs";
 
-import {shuffle} from "./src/common.mjs";
+import {shuffle, download} from "./src/common.mjs";
 
 
 class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isDown: false,
             unit: "",
             time: 0,
             isReady: false,
@@ -159,20 +158,6 @@ class Root extends React.Component {
         }
     }
 
-    async downloadFile() {
-        const {questionsAnswered, scholar} = this.state;
-        const fileName = "file";
-        const json = JSON.stringify({scholar, questionsAnswered});
-        const blob = new Blob([json], {type: "application/json"});
-        const href = await URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = href;
-        link.download = fileName + ".json";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
     nextQuestion() {
         if (!this.state.isComplete) {
             this.setState(prevState => ({
@@ -188,17 +173,6 @@ class Root extends React.Component {
                 isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
                 time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
             }), () => this.countDown(this.state.time));
-        } else {
-            if (!this.state.isDown) {
-                // TODO: Send data.
-
-                this.setState({
-                    isDown: true
-                }, () => {
-                    // NOTE: Download file.
-                    this.downloadFile();
-                })
-            }
         }
     }
 
@@ -364,7 +338,10 @@ class Root extends React.Component {
             ) : e(
                 "div",
                 {},
-                e("p", {}, "Hai finito!")
+                e("p", {}, "Hai finito!"),
+                e("button", {
+                    onClick: () => download(this.state)
+                }, "Scarica")
             )
         )
     }
