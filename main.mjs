@@ -28,7 +28,6 @@ class Root extends React.Component {
                 // }
             ]
         };
-        this.handleClickCallback = this.handleClickCallback.bind(this);
         this.handleChangeCallback = this.handleChangeCallback.bind(this);
     }
 
@@ -115,30 +114,31 @@ class Root extends React.Component {
 
     handleSubmit(evt) {
         evt.preventDefault();
-        // NOTE: Hide scholar form and set time for the first question.
-        this.setState(prevState => ({
-            isReady: !prevState.isReady,
-            time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0,
-        }), () => setInterval(() => this.setState(prevState => ({
-            time: prevState.time > 0 ? prevState.time - 1 : 0
-        }), () => this.state.time <= 0 ? this.nextQuestion() : this.countDown(this.state.time)
-        ), 1000));
-    }
-
-    handleClickCallback(evt) {
-        this.setState(prevState => ({
-            questionsAnswered: [
-                ...prevState.questionsAnswered,
-                {
-                    questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
-                    choiceSet: prevState.currentAnswers.map(answer => ({choiceText: answer}))
-                }
-            ],
-            currentQuestionIndex: prevState.currentQuestionIndex + 1,
-            currentAnswers: [],
-            isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
-            time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
-        }), () => this.countDown(this.state.time));
+        const name = evt.target.name;
+        if (name === "question") {
+            this.setState(prevState => ({
+                questionsAnswered: [
+                    ...prevState.questionsAnswered,
+                    {
+                        questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
+                        choiceSet: prevState.currentAnswers.map(answer => ({choiceText: answer}))
+                    }
+                ],
+                currentQuestionIndex: prevState.currentQuestionIndex + 1,
+                currentAnswers: [],
+                isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
+                time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
+            }), () => this.countDown(this.state.time));
+        } else if (name === "scholar") {
+            // NOTE: Hide scholar form and set time for the first question.
+            this.setState(prevState => ({
+                isReady: !prevState.isReady,
+                time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0,
+            }), () => setInterval(() => this.setState(prevState => ({
+                time: prevState.time > 0 ? prevState.time - 1 : 0
+            }), () => this.state.time <= 0 ? this.nextQuestion() : this.countDown(this.state.time)
+            ), 1000));
+        }
     }
 
     handleChangeCallback(evt) {
@@ -197,6 +197,7 @@ class Root extends React.Component {
             !isReady ? e(
                 "form",
                 {
+                    name: "scholar",
                     onSubmit: (evt) => this.handleSubmit(evt)
                 },
                 e("fieldset", {},
@@ -258,12 +259,7 @@ class Root extends React.Component {
                             value: c
                         }, c))
                     ),
-                    e(
-                        "input", {
-                            type: "submit",
-                            value: "Submit",
-                        }
-                    )
+                    e(Submit)
                 ),
             ) : currentQuestionIndex < questions.length ? e(
                 "section",
@@ -276,7 +272,10 @@ class Root extends React.Component {
                 ),
                 e(
                     "form",
-                    {},
+                    {
+                        name: "question",
+                        onSubmit: (evt) => this.handleSubmit(evt)
+                    },
                     questions[currentQuestionIndex].choiceSet.length === 0 ? e(
                         Text,
                         {
@@ -291,12 +290,7 @@ class Root extends React.Component {
                             currentAnswers,
                         }
                     ),
-                    e(
-                        Submit,
-                        {
-                            handleClickCallback: this.handleClickCallback,
-                        }
-                    ),
+                    e(Submit)
                 ),
 
 
