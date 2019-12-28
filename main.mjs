@@ -105,39 +105,48 @@ class Root extends React.Component {
         }
     }
 
-    countDown(count) {
-        if (!this.state.isComplete) {
-            const countdownNumberEl = document.getElementById('countdown-number');
-            countdownNumberEl.textContent = parseInt(count, 10);
-        }
-    }
+    // countDown(count) {
+    //     if (!this.state.isComplete) {
+    //         const countdownNumberEl = document.getElementById('countdown-number');
+    //         countdownNumberEl.textContent = parseInt(count, 10);
+    //     }
+    // }
 
     handleSubmit(evt) {
         evt.preventDefault();
         const name = evt.target.name;
         if (name === "question") {
-            this.setState(prevState => ({
-                questionsAnswered: [
-                    ...prevState.questionsAnswered,
-                    {
-                        questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
-                        choiceSet: prevState.currentAnswers.map(answer => ({choiceText: answer}))
-                    }
-                ],
-                currentQuestionIndex: prevState.currentQuestionIndex + 1,
-                currentAnswers: [],
-                isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
-                time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
-            }), () => this.countDown(this.state.time));
+            this.setState(
+                prevState => ({
+                    questionsAnswered: [
+                        ...prevState.questionsAnswered,
+                        {
+                            questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
+                            choiceSet: prevState.currentAnswers.map(answer => ({choiceText: answer}))
+                        }
+                    ],
+                    currentQuestionIndex: prevState.currentQuestionIndex + 1,
+                    currentAnswers: [],
+                    isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
+                    time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
+                }),
+                // () => this.countDown(this.state.time)
+            );
         } else if (name === "scholar") {
             // NOTE: Hide scholar form and set time for the first question.
-            this.setState(prevState => ({
-                isReady: !prevState.isReady,
-                time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0,
-            }), () => setInterval(() => this.setState(prevState => ({
-                time: prevState.time > 0 ? prevState.time - 1 : 0
-            }), () => this.state.time <= 0 ? this.nextQuestion() : this.countDown(this.state.time)
-            ), 1000));
+            this.setState(
+                prevState => ({
+                    isReady: !prevState.isReady,
+                    time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0,
+                }), () => setInterval(() => this.setState(prevState => ({
+                    time: prevState.time > 0 ? prevState.time - 1 : 0
+                }),
+                () => this.state.time <= 0 ?
+                this.nextQuestion() :
+                // this.countDown(this.state.time)
+                console.log(this.state.time)
+            ), 1000)
+        );
         }
     }
 
@@ -160,19 +169,25 @@ class Root extends React.Component {
 
     nextQuestion() {
         if (!this.state.isComplete) {
-            this.setState(prevState => ({
-                questionsAnswered: [
-                    ...prevState.questionsAnswered,
-                    {
-                        questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
-                        choiceSet: prevState.currentAnswers.map(answer => ({choiceText: answer}))
-                    }
-                ],
-                currentQuestionIndex: prevState.currentQuestionIndex + 1,
-                currentAnswers: [],
-                isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
-                time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
-            }), () => this.countDown(this.state.time));
+            this.setState(
+                prevState => ({
+                    questionsAnswered: [
+                        ...prevState.questionsAnswered,
+                        {
+                            questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
+                            choiceSet: prevState.currentAnswers.map(answer => ({choiceText: answer}))
+                        }
+                    ],
+                    currentQuestionIndex: prevState.currentQuestionIndex + 1,
+                    currentAnswers: [],
+                    isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
+                    time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
+                }),
+                // () => this.countDown(this.state.time)
+            );
+        } else {
+            console.log("hi");
+            
         }
     }
 
