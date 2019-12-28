@@ -32,6 +32,18 @@ class Root extends React.Component {
     componentDidMount() {
         window.addEventListener("blur", this.onBlur)
 
+        // fetch('http://127.0.0.1:8000/graphql/', {
+        // method: 'POST',
+        // credentials: "same-origin",
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
+        //     body: JSON.stringify({query: "{questions{time level questionText}}"})
+        // }).then(
+        //     response => console.log(response)
+        // ).then(
+        //     responseAsJson => console.log(responseAsJson));
+
         fetch('data.json').then(
             response => response.json().then(
                 data => this.setState({
