@@ -2,6 +2,8 @@ import Checkbox from "./src/checkbox.mjs";
 import Submit from "./src/submit.mjs";
 import Text from "./src/text.mjs";
 
+import {shuffle} from "./src/common.mjs";
+
 
 class Root extends React.Component {
     constructor(props) {
@@ -55,7 +57,7 @@ class Root extends React.Component {
         }).then(
             response => response.json().then(
                 query => this.setState({
-                    questions: query.data.quiz.questions,
+                    questions: shuffle(query.data.quiz.questions),
                     unit: query.data.quiz.unit
                 })
             ).catch(err => {
@@ -68,7 +70,7 @@ class Root extends React.Component {
         // fetch('data.json').then(
         //     response => response.json().then(
         //         query => this.setState({
-        //             questions: query.data.quiz.questions,
+        //             questions: shuffle(query.data.quiz.questions),
         //             unit: query.data.quiz.unit
         //         })
         //     ).catch(err => {

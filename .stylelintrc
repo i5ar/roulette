@@ -1,0 +1,30 @@
+{
+  "extends": "stylelint-config-recommended",
+  "ignoreFiles": "node_modules/**/*.css",
+  "rules": {
+    "indentation": 4,
+    "string-quotes": "double",
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreProperties": [
+          "font-range",
+          "letter-spacing-range",
+          "line-height-range",
+          "lower-font-range",
+          "lower-letter-spacing-range",
+          "lower-line-height-range",
+          "max-font-size",
+          "max-letter-spacing",
+          "max-line-height",
+          "min-font-size",
+          "min-letter-spacing",
+          "min-line-height",
+          "upper-font-range",
+          "upper-letter-spacing-range",
+          "upper-line-height-range"
+        ]
+      }
+    ]
+  }
+}
