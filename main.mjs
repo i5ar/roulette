@@ -188,8 +188,28 @@ class Root extends React.Component {
                 // () => this.countDown(this.state.time)
             );
         } else {
-            console.log("hi");
             clearInterval(this.interval);
+            // NOTE: Send data.
+            const {questionsAnswered, scholar} = this.state;
+            // const data = JSON.stringify({scholar, questionsAnswered})
+            const data = JSON.stringify(this.state.scholar);
+            console.log(data);
+            fetch('http://127.0.0.1:8000/graphql/', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({query: `mutation {
+                    createBulk (data: ${data}) {
+                      id
+                      data
+                    }
+                  }`})
+            }).then(
+                response => response.ok ? alert("Submitted!") : alert("Error!")
+            ).catch(err => {
+                console.log(err);
+            });
         }
     }
 
