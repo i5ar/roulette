@@ -9,6 +9,7 @@ class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            server: "http://127.0.0.1:8000/graphql/",
             unit: "",
             time: 0,
             isReady: false,
@@ -35,7 +36,7 @@ class Root extends React.Component {
     componentDidMount() {
         window.addEventListener("blur", this.onBlur)
 
-        fetch('http://127.0.0.1:8000/graphql/', {
+        fetch(this.state.server, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -190,17 +191,15 @@ class Root extends React.Component {
         } else {
             clearInterval(this.interval);
             // NOTE: Send data.
-            const {questionsAnswered, scholar} = this.state;
-            // const data = JSON.stringify({scholar, questionsAnswered})
-            const data = JSON.stringify(this.state.scholar);
-            console.log(data);
-            fetch('http://127.0.0.1:8000/graphql/', {
+            const {scholar, questionsAnswered} = this.state;
+            const data = encodeURIComponent(JSON.stringify({scholar, questionsAnswered}));
+            fetch(this.state.server, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({query: `mutation {
-                    createBulk (data: ${data}) {
+                    createBulk (data: "${data}") {
                       id
                       data
                     }
@@ -231,148 +230,150 @@ class Root extends React.Component {
         return e(
             f,
             {},
-            !isReady ? e(
-                "form",
-                {
-                    name: "scholar",
-                    onSubmit: (evt) => this.handleSubmit(evt)
-                },
-                e("fieldset", {},
-                    e("legend", {}, "Studente"),
-                    e("label", {}, "Nome"),
-                    e(
-                        "input",
-                        {
-                            type: "text",
-                            onChange: evt => {
-                                const value = evt.target.value;
-                                this.setState(prevState => ({
-                                    scholar: {
-                                        ...prevState.scholar,
-                                        name: value || null
-                                    }
-                                }))
-                            },
-                            value: scholar.name || "",
-                            required: true
-                        }
-                    ),
-                    e("label", {}, "Cognome"),
-                    e(
-                        "input",
-                        {
-                            type: "text",
-                            onChange: evt => {
-                                const value = evt.target.value;
-                                this.setState(prevState => ({
-                                    scholar: {
-                                        ...prevState.scholar,
-                                        surname: value || null
-                                    }
-                                }))
-                            },
-                            value: scholar.surname || "",
-                            required: true
-                        }
-                    ),
-                    e("label", {}, "Classe"),
-                    e(
-                        "select",
-                        {
-                            onChange: evt => {
-                                const value = evt.target.value;
-                                this.setState(prevState => ({
-                                    scholar: {
-                                        ...prevState.scholar,
-                                        grade: value || null
-                                    }
-                                }))
-                            },
-                            value: scholar.grade || "",
-                            required: true
-                        },
-                        e("option", {value: null}, ""),
-                        grades.map(c => e("option", {
-                            value: c
-                        }, c))
-                    ),
-                    e(Submit)
-                ),
-            ) : currentQuestionIndex < questions.length ? e(
-                "section",
-                {},
-                e(
-                    "h2",
-                    {},
-                    questions[currentQuestionIndex].questionText + `
-                    (PUNTI ${questions[currentQuestionIndex].level})`
-                ),
-                e(
-                    "form",
+            e("header", {}, e("h1", {}, "Laboratorio di grafica")),
+            e("main", {},
+                !isReady ? e("form",
                     {
-                        name: "question",
+                        name: "scholar",
                         onSubmit: (evt) => this.handleSubmit(evt)
                     },
-                    questions[currentQuestionIndex].choiceSet.length === 0 ? e(
-                        Text,
-                        {
-                            handleChangeCallback: this.handleChangeCallback,
-                            currentAnswers,
-                        }
-                    ) : e(
-                        Checkbox,
-                        {
-                            choiceSet: questions[currentQuestionIndex].choiceSet,
-                            handleChangeCallback: this.handleChangeCallback,
-                            currentAnswers,
-                        }
-                    ),
-                    e(Submit)
-                ),
-
-
-                e(
-                    "figure",
-                    {
-                        key: this.state.currentQuestionIndex
-                    },
-                    e("figcaption", {
-                        style: {
-                            color: "var(--base08)",
-                            display: "inline-block",
-                            lineHeight: "var(--width)"
-                        },
-                        id: "countdown-number"
-                    }),
-                    e(
-                        "svg",
-                        {},
+                    e("fieldset", {},
+                        e("legend", {}, "Studente"),
+                        e("label", {}, "Nome"),
                         e(
-                            "circle",
+                            "input",
                             {
-                                style: {
-                                    // fill: "none",
-                                    // stroke: "var(--base08)",
-                                    // strokeWidth: "var(--stroke-width)",
-                                    animation: `countdown ${time}s linear infinite forwards`
+                                type: "text",
+                                onChange: evt => {
+                                    const value = evt.target.value;
+                                    this.setState(prevState => ({
+                                        scholar: {
+                                            ...prevState.scholar,
+                                            name: value || null
+                                        }
+                                    }))
                                 },
-                                r: width / 2 - strokeWidth,
-                                cx: width / 2,
-                                cy: width / 2,
+                                value: scholar.name || "",
+                                required: true
                             }
                         ),
+                        e("label", {}, "Cognome"),
+                        e(
+                            "input",
+                            {
+                                type: "text",
+                                onChange: evt => {
+                                    const value = evt.target.value;
+                                    this.setState(prevState => ({
+                                        scholar: {
+                                            ...prevState.scholar,
+                                            surname: value || null
+                                        }
+                                    }))
+                                },
+                                value: scholar.surname || "",
+                                required: true
+                            }
+                        ),
+                        e("label", {}, "Classe"),
+                        e(
+                            "select",
+                            {
+                                onChange: evt => {
+                                    const value = evt.target.value;
+                                    this.setState(prevState => ({
+                                        scholar: {
+                                            ...prevState.scholar,
+                                            grade: value || null
+                                        }
+                                    }))
+                                },
+                                value: scholar.grade || "",
+                                required: true
+                            },
+                            e("option", {value: null}, ""),
+                            grades.map(c => e("option", {
+                                value: c
+                            }, c))
+                        ),
+                        e(Submit)
+                    ),
+                ) : currentQuestionIndex < questions.length ? e(
+                    "section",
+                    {},
+                    e(
+                        "h2",
+                        {},
+                        questions[currentQuestionIndex].questionText + `
+                        (PUNTI ${questions[currentQuestionIndex].level})`
+                    ),
+                    e(
+                        "form",
+                        {
+                            name: "question",
+                            onSubmit: (evt) => this.handleSubmit(evt)
+                        },
+                        questions[currentQuestionIndex].choiceSet.length === 0 ? e(
+                            Text,
+                            {
+                                handleChangeCallback: this.handleChangeCallback,
+                                currentAnswers,
+                            }
+                        ) : e(
+                            Checkbox,
+                            {
+                                choiceSet: questions[currentQuestionIndex].choiceSet,
+                                handleChangeCallback: this.handleChangeCallback,
+                                currentAnswers,
+                            }
+                        ),
+                        e(Submit)
+                    ),
 
 
+                    e(
+                        "figure",
+                        {
+                            key: this.state.currentQuestionIndex
+                        },
+                        e("figcaption", {
+                            style: {
+                                color: "var(--base08)",
+                                display: "inline-block",
+                                lineHeight: "var(--width)"
+                            },
+                            id: "countdown-number"
+                        }),
+                        e(
+                            "svg",
+                            {},
+                            e(
+                                "circle",
+                                {
+                                    style: {
+                                        // fill: "none",
+                                        // stroke: "var(--base08)",
+                                        // strokeWidth: "var(--stroke-width)",
+                                        animation: `countdown ${time}s linear infinite forwards`
+                                    },
+                                    r: width / 2 - strokeWidth,
+                                    cx: width / 2,
+                                    cy: width / 2,
+                                }
+                            ),
+
+
+                        )
                     )
-                )
 
-            ) : e(
-                "div",
-                {},
-                e("p", {}, "Hai finito!"),
-                e("button", {
-                    onClick: () => download(this.state)
-                }, "Scarica")
+                ) : e(
+                    "div",
+                    {},
+                    e("p", {}, "Hai finito!"),
+                    e("button", {
+                        onClick: () => download(this.state)
+                    }, "Scarica")
+                )
             )
         )
     }

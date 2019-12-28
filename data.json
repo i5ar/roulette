@@ -6,39 +6,39 @@
                 {
                     "time": 3,
                     "level": 2,
-                    "questionText": "Nella tricromia quale colore risulta essere composto dal rosso e dal verde?",
+                    "questionText": "Nella tricromia a sintesi additiva quale colore risulta essere composto dalla sovrapposizione del rosso e del verde?",
                     "choiceSet": [
                         {
                             "choiceText": "giallo"
                         },
                         {
                             "choiceText": "blu"
+                        },
+                        {
+                            "choiceText": "rosso"
+                        },
+                        {
+                            "choiceText": "magenta"
                         }
                     ]
                 },
                 {
                     "time": 3,
                     "level": 1,
-                    "questionText": "Seleziona i quesiti veri.",
+                    "questionText": "Seleziona le affermazioni corrette.",
                     "choiceSet": [
                         {
-                            "choiceText": "Il rosso è un colore primario della tricromia"
+                            "choiceText": "Il rosso è un colore primario della tricromia a sintesi additiva."
                         },
                         {
-                            "choiceText": "Il blu è un colore primario della tricromia"
+                            "choiceText": "Il blu è un colore primario della tricromia a sintesi additiva."
                         }
                     ]
                 },
                 {
                     "time": 3,
                     "level": 3,
-                    "questionText": "Esponi la differenza tra HTTP e HTTPS.",
-                    "choiceSet": []
-                },
-                {
-                    "time": 3,
-                    "level": 1,
-                    "questionText": "Esponi la differenza tra head e body.",
+                    "questionText": "Esponi la differenza tra il protocollo HTTP ed il protocollo HTTPS.",
                     "choiceSet": []
                 }
             ]
