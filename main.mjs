@@ -21,6 +21,7 @@ class Root extends React.Component {
                 //     name: "",
                 //     surname: "",
                 //     grade: "",
+                //     section: "",
             },
             questionsAnswered: [
                 // {
@@ -192,14 +193,20 @@ class Root extends React.Component {
             clearInterval(this.interval);
             // NOTE: Send data.
             const {scholar, questionsAnswered} = this.state;
-            const data = encodeURIComponent(JSON.stringify({scholar, questionsAnswered}));
+            const data = encodeURIComponent(JSON.stringify(questionsAnswered));
             fetch(this.state.server, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({query: `mutation {
-                    createBulk (data: "${data}") {
+                    createBulk (
+                        name: "${scholar.name}",
+                        surname: "${scholar.surname}",
+                        grade: "${scholar.grade}",
+                        section: "${scholar.section}",
+                        data: "${data}"
+                    ) {
                       id
                       data
                     }
@@ -225,7 +232,8 @@ class Root extends React.Component {
         const strokeWidth = 32;
         const time = questions[currentQuestionIndex] ? questions[currentQuestionIndex].time : 0;
 
-        const grades = ["2A", "2B", "4A", "4B", "5A", "5B"];
+        const grades = ["2", "4", "5"];
+        const sections = ["A", "B"];
 
         return e(
             f,
@@ -275,7 +283,7 @@ class Root extends React.Component {
                                 required: true
                             }
                         ),
-                        e("label", {}, "Classe"),
+                        e("label", {}, "Anno"),
                         e(
                             "select",
                             {
@@ -293,6 +301,27 @@ class Root extends React.Component {
                             },
                             e("option", {value: null}, ""),
                             grades.map(c => e("option", {
+                                value: c
+                            }, c))
+                        ),
+                        e("label", {}, "Sezione"),
+                        e(
+                            "select",
+                            {
+                                onChange: evt => {
+                                    const value = evt.target.value;
+                                    this.setState(prevState => ({
+                                        scholar: {
+                                            ...prevState.scholar,
+                                            section: value || null
+                                        }
+                                    }))
+                                },
+                                value: scholar.section || "",
+                                required: true
+                            },
+                            e("option", {value: null}, ""),
+                            sections.map(c => e("option", {
                                 value: c
                             }, c))
                         ),
