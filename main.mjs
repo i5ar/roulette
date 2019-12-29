@@ -11,6 +11,7 @@ class Root extends React.Component {
         this.state = {
             server: "http://127.0.0.1:8000/graphql/",
             unit: "",
+            id: "",  // quiz id
             time: 0,
             isReady: false,
             isComplete: false,
@@ -60,7 +61,8 @@ class Root extends React.Component {
             response => response.json().then(
                 query => this.setState({
                     questions: query.data.quiz.questions,
-                    unit: query.data.quiz.unit
+                    unit: query.data.quiz.unit,
+                    id: query.data.quiz.id,
                 })
             ).catch(err => {
                 console.log(err);
@@ -192,7 +194,7 @@ class Root extends React.Component {
         } else {
             clearInterval(this.interval);
             // NOTE: Send data.
-            const {scholar, questionsAnswered} = this.state;
+            const {scholar, questionsAnswered, id} = this.state;
             const data = encodeURIComponent(JSON.stringify(questionsAnswered));
             fetch(this.state.server, {
                 method: 'POST',
@@ -205,7 +207,8 @@ class Root extends React.Component {
                         surname: "${scholar.surname}",
                         grade: "${scholar.grade}",
                         section: "${scholar.section}",
-                        data: "${data}"
+                        data: "${data}",
+                        quiz: "${id}"
                     ) {
                       id
                       data
@@ -232,7 +235,7 @@ class Root extends React.Component {
         const strokeWidth = 32;
         const time = questions[currentQuestionIndex] ? questions[currentQuestionIndex].time : 0;
 
-        const grades = ["2", "4", "5"];
+        const grades = ["1", "2", "3", "4", "5"];
         const sections = ["A", "B"];
 
         return e(
