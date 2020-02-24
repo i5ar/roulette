@@ -37,6 +37,7 @@ function retrieveQuiz(server, id) {
 }
 
 function createBulk(server, id, scholar, data) {
+    const pubDate = new Date().toISOString();
     return fetch(server, {
         method: 'POST',
         headers: {
@@ -49,7 +50,8 @@ function createBulk(server, id, scholar, data) {
                 grade: "${scholar.grade}",
                 section: "${scholar.section}",
                 data: "${data}",
-                quiz: "${id}"
+                quiz: "${id}",
+                pubDate: "${pubDate}"
             ) {
                 id
                 data
