@@ -24,6 +24,7 @@ class Root extends React.Component {
                 //     grade: "",
                 //     section: "",
             },
+            quizzes: [],
             questionsAnswered: [
                 // {
                 //     questionText: "",
@@ -44,25 +45,15 @@ class Root extends React.Component {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({query: `{
-                quiz(id: 1) {
+                quizzes {
                     id
                     unit
-                    questions {
-                        time
-                        level
-                        questionText
-                        choiceSet {
-                            choiceText
-                        }
-                    }
                 }
             }`})
         }).then(
             response => response.json().then(
                 query => this.setState({
-                    questions: query.data.quiz.questions,
-                    unit: query.data.quiz.unit,
-                    id: query.data.quiz.id,
+                    quizzes: query.data.quizzes,
                 })
             ).catch(err => {
                 console.log(err);
@@ -70,19 +61,6 @@ class Root extends React.Component {
         ).catch(err => {
             console.log(err);
         });
-
-        // fetch('data.json').then(
-        //     response => response.json().then(
-        //         query => this.setState({
-        //             questions: query.data.quiz.questions,
-        //             unit: query.data.quiz.unit
-        //         })
-        //     ).catch(err => {
-        //         console.log(err);
-        //     })
-        // ).catch(err => {
-        //     console.log(err);
-        // });
 
     }
 
@@ -138,21 +116,64 @@ class Root extends React.Component {
                 // () => this.countDown(this.state.time)
             );
         } else if (name === "scholar") {
-            // NOTE: Hide scholar form and set time for the first question.
-            this.setState(
-                prevState => ({
-                    isReady: !prevState.isReady,
-                    time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0,
-                }), () => this.interval = setInterval(() => this.setState(
-                    prevState => ({
-                        time: prevState.time > 0 ? prevState.time - 1 : 0
-                    }),
-                    () => this.state.time <= 0 ?
-                    this.nextQuestion() :
-                    // this.countDown(this.state.time)
-                    console.log(this.state.time)
-                ), 1000)
-            );
+            fetch(this.state.server, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({query: `{
+                    quiz(id: ${this.state.id}) {
+                        id
+                        unit
+                        questions {
+                            time
+                            level
+                            questionText
+                            choiceSet {
+                                choiceText
+                            }
+                        }
+                    }
+                }`})
+            }).then(
+                response => response.json().then(
+                    query => this.setState(prevState => ({
+                        questions: query.data.quiz.questions,
+                        unit: query.data.quiz.unit,
+                        id: query.data.quiz.id,
+                        time: query.data.quiz.questions[prevState.currentQuestionIndex].time,
+                        isReady: !prevState.isReady,
+                    }), () => this.interval = setInterval(() => this.setState(
+                            prevState => ({
+                                time: prevState.time > 0 ? prevState.time - 1 : 0
+                            }),
+                            () => this.state.time <= 0 ?
+                            this.nextQuestion() :
+                            // this.countDown(this.state.time)
+                            console.log(this.state.time)
+                        ), 1000)
+                    )
+                ).catch(err => {
+                    console.log(err);
+                })
+            )
+            .catch(err => {
+                console.log(err);
+            });
+
+            // fetch('data.json').then(
+            //     response => response.json().then(
+            //         query => this.setState({
+            //             questions: query.data.quiz.questions,
+            //             unit: query.data.quiz.unit
+            //         })
+            //     ).catch(err => {
+            //         console.log(err);
+            //     })
+            // ).catch(err => {
+            //     console.log(err);
+            // });
+
         }
     }
 
@@ -226,6 +247,8 @@ class Root extends React.Component {
         const {
             isReady,
             scholar,
+            quizzes,
+            id,
             questions,
             currentAnswers,
             currentQuestionIndex
@@ -327,6 +350,22 @@ class Root extends React.Component {
                             sections.map(c => e("option", {
                                 value: c
                             }, c))
+                        ),
+                        e("label", {}, "Unità didattica"),
+                        e(
+                            "select",
+                            {
+                                onChange: evt => {
+                                    const value = evt.target.value;
+                                    this.setState({id: value || null})
+                                },
+                                value: id || null,
+                                required: true
+                            },
+                            e("option", {value: null}, ""),
+                            quizzes.map(c => e("option", {
+                                value: c.id
+                            }, c.unit))
                         ),
                         e(Submit)
                     ),
