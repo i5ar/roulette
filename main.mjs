@@ -9,6 +9,7 @@ class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isDebug: true,
             server: "http://127.0.0.1:8000/graphql/",
             unit: "",
             id: "",  // quiz id
@@ -37,6 +38,17 @@ class Root extends React.Component {
     }
 
     componentDidMount() {
+
+        // Debug
+        this.setState(prevState => ({
+            scholar: prevState.isDebug ? {
+                name: "Mario",
+                surname: "Rossi",
+                grade: "5",
+                section: "B"
+            } : {}
+        }));
+
         window.addEventListener("blur", this.onBlur)
         retrieveQuizzes(this.state.server).then(
             response => response.json().then(
