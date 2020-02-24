@@ -28,8 +28,19 @@
     --stroke-dasharray: calc(var(--PI) * var(--d));  /* 113px; */
 }
 
-body {
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     font-family: var(--font);
+}
+
+main {
+    flex-grow: 1;
+}
+
+footer {
+    text-align: center;
 }
 
 header,

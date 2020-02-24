@@ -3,7 +3,7 @@ import Submit from "./src/submit.mjs";
 import Text from "./src/text.mjs";
 
 import {shuffle, download} from "./src/common.mjs";
-
+import {retrieveQuizzes, retrieveQuiz, createBulk} from "./src/service.mjs";
 
 class Root extends React.Component {
     constructor(props) {
@@ -38,19 +38,7 @@ class Root extends React.Component {
 
     componentDidMount() {
         window.addEventListener("blur", this.onBlur)
-
-        fetch(this.state.server, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({query: `{
-                quizzes {
-                    id
-                    unit
-                }
-            }`})
-        }).then(
+        retrieveQuizzes(this.state.server).then(
             response => response.json().then(
                 query => this.setState({
                     quizzes: query.data.quizzes,
@@ -88,54 +76,21 @@ class Root extends React.Component {
         }
     }
 
-    // countDown(count) {
-    //     if (!this.state.isComplete) {
-    //         const countdownNumberEl = document.getElementById('countdown-number');
-    //         countdownNumberEl.textContent = parseInt(count, 10);
-    //     }
-    // }
+    countDown(count) {
+        if (!this.state.isComplete) {
+            const countdownNumberEl = document.getElementById('countdown-number');
+            countdownNumberEl.textContent = parseInt(count, 10);
+        }
+    }
 
     handleSubmit(evt) {
         evt.preventDefault();
         const name = evt.target.name;
         if (name === "question") {
-            this.setState(
-                prevState => ({
-                    questionsAnswered: [
-                        ...prevState.questionsAnswered,
-                        {
-                            questionText: prevState.questions[prevState.currentQuestionIndex].questionText,
-                            choiceSet: prevState.currentAnswers.map(answer => ({choiceText: answer}))
-                        }
-                    ],
-                    currentQuestionIndex: prevState.currentQuestionIndex + 1,
-                    currentAnswers: [],
-                    isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
-                    time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
-                }),
-                // () => this.countDown(this.state.time)
-            );
+            this.nextQuestion();
         } else if (name === "scholar") {
-            fetch(this.state.server, {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({query: `{
-                    quiz(id: ${this.state.id}) {
-                        id
-                        unit
-                        questions {
-                            time
-                            level
-                            questionText
-                            choiceSet {
-                                choiceText
-                            }
-                        }
-                    }
-                }`})
-            }).then(
+            retrieveQuiz(this.state.server, this.state.id)
+            .then(
                 response => response.json().then(
                     query => this.setState(prevState => ({
                         questions: query.data.quiz.questions,
@@ -149,8 +104,8 @@ class Root extends React.Component {
                             }),
                             () => this.state.time <= 0 ?
                             this.nextQuestion() :
-                            // this.countDown(this.state.time)
-                            console.log(this.state.time)
+                            this.countDown(this.state.time)
+                            // console.log(this.state.time)
                         ), 1000)
                     )
                 ).catch(err => {
@@ -179,7 +134,6 @@ class Root extends React.Component {
 
     handleChangeCallback(evt) {
         if (evt.target.type === "checkbox") {
-            const answer = evt.target.value;
             const answerVal = evt.target.value;
             const answerChecked = evt.target.checked;
             this.setState(prevState => ({
@@ -188,9 +142,7 @@ class Root extends React.Component {
         }
         if (evt.target.type === "text") {
             const answer = evt.target.value;
-            this.setState(prevState => ({
-                currentAnswers: [answer]
-            }));
+            this.setState({currentAnswers: [answer]});
         }
     }
 
@@ -210,32 +162,15 @@ class Root extends React.Component {
                     isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
                     time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
                 }),
-                // () => this.countDown(this.state.time)
+                () => this.countDown(this.state.time)
             );
         } else {
             clearInterval(this.interval);
             // NOTE: Send data.
             const {scholar, questionsAnswered, id} = this.state;
             const data = encodeURIComponent(JSON.stringify(questionsAnswered));
-            fetch(this.state.server, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({query: `mutation {
-                    createBulk (
-                        name: "${scholar.name}",
-                        surname: "${scholar.surname}",
-                        grade: "${scholar.grade}",
-                        section: "${scholar.section}",
-                        data: "${data}",
-                        quiz: "${id}"
-                    ) {
-                      id
-                      data
-                    }
-                  }`})
-            }).then(
+            createBulk(this.state.server, id, scholar, data)
+            .then(
                 response => response.ok ? alert("Submitted!") : alert("Error!")
             ).catch(err => {
                 console.log(err);
@@ -264,8 +199,7 @@ class Root extends React.Component {
         return e(
             f,
             {},
-            e("header", {}, e("h1", {}, "Laboratorio di grafica")),
-            e("main", {},
+            e("div", {},
                 !isReady ? e("form",
                     {
                         name: "scholar",
@@ -351,7 +285,7 @@ class Root extends React.Component {
                                 value: c
                             }, c))
                         ),
-                        e("label", {}, "Unità didattica"),
+                        e("label", {}, "Unità"),
                         e(
                             "select",
                             {
