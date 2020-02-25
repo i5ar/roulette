@@ -1,23 +1,8 @@
 :root {
-    /* Tomorrow color scheme */
-    --base00: #ffffff;
-    --base01: #e0e0e0;
-    --base02: #d6d6d6;
-    --base03: #8e908c;
-    --base04: #969896;
-    --base05: #4d4d4c;
-    --base06: #282a2e;
-    --base07: #1d1f21;
-    --base08: #c82829;
-    --base09: #f5871f;
-    --base0A: #eab700;
-    --base0B: #718c00;
-    --base0C: #3e999f;
-    --base0D: #4271ae;
-    --base0E: #8959a8;
-    --base0F: #a3685a;
-
-    --font: 'Courier Prime', monospace;
+    --white: #ffffff;
+    --blue: #002359;
+    --orange: #F59000;
+    --font: 'Bitter', serif;
 }
 
 html, body {
@@ -25,6 +10,7 @@ html, body {
     display: flex;
     flex-direction: column;
     font-family: var(--font);
+    background-color: var(--white);
 }
 
 main {
@@ -44,6 +30,7 @@ div {
 h1,
 p {
     text-align: center;
+    color: var(--blue);
 }
 
 fieldset {
@@ -67,7 +54,26 @@ input[type=submit] {
 
 input[type=submit] {
     margin: 1rem 0 0;
+    cursor: pointer;
+    color: var(--white);
+    background-color: var(--orange);
+    border: solid 1px var(--orange);
 }
+input[type=submit]:hover {
+    color: var(--white);
+    background-color: var(--blue);
+    border-color: var(--blue);
+}
+
+
+section label,
+section input[type=checkbox],
+section input[type=radio] {
+    cursor: pointer;
+    margin-right: 1rem;
+}
+
+
 
 section input[type=text] {
     width: 100%;
@@ -75,6 +81,25 @@ section input[type=text] {
 
 button {
     padding: 0.4rem;
+    margin: 0 0.2rem;
+    cursor: pointer;
+    color: var(--white);
+    background-color: var(--orange);
+    border: solid 1px var(--orange);
+}
+
+button:hover {
+    color: var(--white);
+    background-color: var(--blue);
+    border-color: var(--blue);
+}
+
+a {
+    color: var(--orange);
+    text-decoration: none;
+}
+a:hover {
+    color: var(--blue);
 }
 
 /* Countdown */
@@ -86,7 +111,7 @@ figure {
 }
 
 figcaption {
-    color: var(--base08);
+    color: var(--orange);
     display: inline-block;
 }
 
@@ -100,5 +125,5 @@ svg {
 svg circle {
     stroke-dashoffset: 0;
     fill: none;
-    stroke: var(--base08);
+    stroke: var(--orange);
 }
