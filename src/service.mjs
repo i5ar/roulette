@@ -7,7 +7,7 @@ function retrieveQuizzes(server) {
         body: JSON.stringify({query: `{
             quizzes {
                 id
-                unit
+                name
             }
         }`})
     })
@@ -22,7 +22,7 @@ function retrieveQuiz(server, id) {
         body: JSON.stringify({query: `{
             quiz(id: ${id}) {
                 id
-                unit
+                name
                 questions {
                     time
                     level

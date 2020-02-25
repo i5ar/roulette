@@ -115,7 +115,7 @@ class Root extends React.Component {
                         scholar: {
                             ...prevState.scholar,
                             unitId: query.data.quiz.id,
-                            unitName: query.data.quiz.unit,
+                            unitName: query.data.quiz.name,
                         },
                         isReady: !prevState.isReady,
                     }), () => this.interval = setInterval(() => this.setState(
@@ -298,7 +298,7 @@ class Root extends React.Component {
                                             ...prevState.scholar,
                                             unitId: value || null,
                                             unitName: prevState.quizzes.find(
-                                                quiz => quiz.id == value).unit || null
+                                                quiz => quiz.id == value).name || null
                                         }
                                     }))
                                 },
@@ -308,7 +308,7 @@ class Root extends React.Component {
                             e("option", {value: null}, ""),
                             quizzes.map(c => e("option", {
                                 value: c.id
-                            }, c.unit))
+                            }, c.name))
                         ),
                         e(Submit)
                     ),
