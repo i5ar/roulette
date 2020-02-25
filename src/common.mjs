@@ -23,9 +23,9 @@ function shuffle(array) {
 function send(state, interval) {
     // NOTE: Send data.
     clearInterval(interval);
-    const {scholar, questionsAnswered, server} = state;
+    const {header, questionsAnswered, server} = state;
     const data = encodeURIComponent(JSON.stringify(questionsAnswered));
-    createBulk(server, scholar, data).then(
+    createBulk(server, header, data).then(
         response => response.ok ? alert("Submitted!") : alert("Error!")
     ).catch(err => {
         console.log(err);
@@ -33,9 +33,9 @@ function send(state, interval) {
 }
 
 async function download(state) {
-    const {questionsAnswered, scholar} = state;
+    const {questionsAnswered, header} = state;
     const fileName = "file";
-    const json = JSON.stringify({scholar, questionsAnswered});
+    const json = JSON.stringify({header, questionsAnswered});
     const blob = new Blob([json], {type: "application/json"});
     const href = await URL.createObjectURL(blob);
     const link = document.createElement("a");

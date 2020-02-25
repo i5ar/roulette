@@ -20,7 +20,7 @@ class Root extends React.Component {
             questions: [],
             currentQuestionIndex: 0,
             currentAnswers: [],
-            scholar: {
+            header: {
                 //     name: "",
                 //     surname: "",
                 //     grade: "",
@@ -44,7 +44,7 @@ class Root extends React.Component {
 
         // Debug
         this.setState(prevState => ({
-            scholar: prevState.isDebug ? {
+            header: prevState.isDebug ? {
                 name: "Mario",
                 surname: "Rossi",
                 grade: "5",
@@ -105,15 +105,15 @@ class Root extends React.Component {
         const name = evt.target.name;
         if (name === "question") {
             this.nextQuestion();
-        } else if (name === "scholar") {
-            retrieveQuiz(this.state.server, this.state.scholar.unitId).then(
+        } else if (name === "header") {
+            retrieveQuiz(this.state.server, this.state.header.unitId).then(
                 response => response.json().then(
                     query => this.setState(prevState => ({
                         questions: query.data.quiz.questions,
                         time: query.data.quiz.questions[
                             prevState.currentQuestionIndex].time,
-                        scholar: {
-                            ...prevState.scholar,
+                        header: {
+                            ...prevState.header,
                             unitId: query.data.quiz.id,
                             unitName: query.data.quiz.name,
                         },
@@ -178,7 +178,7 @@ class Root extends React.Component {
     render() {
         const {
             isReady,
-            scholar,
+            header,
             quizzes,
             questions,
             currentAnswers,
@@ -204,7 +204,7 @@ class Root extends React.Component {
             e("div", {},
                 !isReady ? e("form",
                     {
-                        name: "scholar",
+                        name: "header",
                         onSubmit: (evt) => this.handleSubmit(evt)
                     },
                     e("fieldset", {},
@@ -217,13 +217,13 @@ class Root extends React.Component {
                                 onChange: evt => {
                                     const value = evt.target.value;
                                     this.setState(prevState => ({
-                                        scholar: {
-                                            ...prevState.scholar,
+                                        header: {
+                                            ...prevState.header,
                                             name: value || null
                                         }
                                     }))
                                 },
-                                value: scholar.name || "",
+                                value: header.name || "",
                                 required: true
                             }
                         ),
@@ -235,13 +235,13 @@ class Root extends React.Component {
                                 onChange: evt => {
                                     const value = evt.target.value;
                                     this.setState(prevState => ({
-                                        scholar: {
-                                            ...prevState.scholar,
+                                        header: {
+                                            ...prevState.header,
                                             surname: value || null
                                         }
                                     }))
                                 },
-                                value: scholar.surname || "",
+                                value: header.surname || "",
                                 required: true
                             }
                         ),
@@ -252,13 +252,13 @@ class Root extends React.Component {
                                 onChange: evt => {
                                     const value = evt.target.value;
                                     this.setState(prevState => ({
-                                        scholar: {
-                                            ...prevState.scholar,
+                                        header: {
+                                            ...prevState.header,
                                             grade: value || null
                                         }
                                     }))
                                 },
-                                value: scholar.grade || "",
+                                value: header.grade || "",
                                 required: true
                             },
                             e("option", {value: null}, ""),
@@ -273,13 +273,13 @@ class Root extends React.Component {
                                 onChange: evt => {
                                     const value = evt.target.value;
                                     this.setState(prevState => ({
-                                        scholar: {
-                                            ...prevState.scholar,
+                                        header: {
+                                            ...prevState.header,
                                             section: value || null
                                         }
                                     }))
                                 },
-                                value: scholar.section || "",
+                                value: header.section || "",
                                 required: true
                             },
                             e("option", {value: null}, ""),
@@ -294,15 +294,15 @@ class Root extends React.Component {
                                 onChange: evt => {
                                     const value = evt.target.value;
                                     this.setState(prevState => ({
-                                        scholar: {
-                                            ...prevState.scholar,
+                                        header: {
+                                            ...prevState.header,
                                             unitId: value || null,
                                             unitName: prevState.quizzes.find(
                                                 quiz => quiz.id == value).name || null
                                         }
                                     }))
                                 },
-                                value: scholar.unitId || null,
+                                value: header.unitId || null,
                                 required: true
                             },
                             e("option", {value: null}, ""),

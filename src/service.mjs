@@ -36,7 +36,7 @@ function retrieveQuiz(server, id) {
     })
 }
 
-function createBulk(server, scholar, data) {
+function createBulk(server, header, data) {
     const pubDate = new Date().toISOString();
     return fetch(server, {
         method: 'POST',
@@ -45,12 +45,12 @@ function createBulk(server, scholar, data) {
         },
         body: JSON.stringify({query: `mutation {
             createBulk (
-                name: "${scholar.name}",
-                surname: "${scholar.surname}",
-                grade: "${scholar.grade}",
-                section: "${scholar.section}",
+                name: "${header.name}",
+                surname: "${header.surname}",
+                grade: "${header.grade}",
+                section: "${header.section}",
                 data: "${data}",
-                quiz: "${scholar.unitId}",
+                quiz: "${header.unitId}",
                 pubDate: "${pubDate}"
             ) {
                 id
