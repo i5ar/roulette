@@ -18,14 +18,6 @@
     --base0F: #a3685a;
 
     --font: 'Courier Prime', monospace;
-
-    /* Countdown */
-    --width: 128px;
-    --stroke-width: 32px;
-    --PI: 3.1415;
-    --r: calc(var(--width) / 2 - var(--stroke-width));
-    --d: calc(var(--r) * 2);
-    --stroke-dasharray: calc(var(--PI) * var(--d));  /* 113px; */
 }
 
 html, body {
@@ -92,33 +84,23 @@ figure {
     position: relative;
     clear: both;
     margin: auto;
-    height: var(--width);
-    width: var(--width);
     text-align: center;
+}
+
+figcaption {
+    color: var(--base08);
+    display: inline-block;
 }
 
 svg {
     position: absolute;
     top: 0;
     right: 0;
-    width: var(--width);
-    height: var(--width);
     transform: rotateY(-180deg) rotateZ(-90deg);
 }
 
 svg circle {
-    stroke-dasharray: var(--stroke-dasharray);
     stroke-dashoffset: 0;
     fill: none;
     stroke: var(--base08);
-    stroke-width: var(--stroke-width);
-
-}
-
-@keyframes countdown {
-    from {
-        stroke-dashoffset: 0px;
-    } to {
-        stroke-dashoffset: var(--stroke-dasharray);
-    }
 }

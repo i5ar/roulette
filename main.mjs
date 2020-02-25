@@ -201,9 +201,15 @@ class Root extends React.Component {
             currentQuestionIndex
         } = this.state;
 
+        const time = questions[currentQuestionIndex] ? questions[currentQuestionIndex].time : 0;
+
         const width = 128;
         const strokeWidth = 32;
-        const time = questions[currentQuestionIndex] ? questions[currentQuestionIndex].time : 0;
+        const PI = 3.1415;
+        const r = width / 2 - strokeWidth;
+        const d = r * 2;
+        const strokeDasharray = PI * d;  // 113
+        const strokeDashoffset = 201 - (201 / time * this.state.time);
 
         const grades = ["1", "2", "3", "4", "5"];
         const sections = ["A", "B"];
@@ -321,8 +327,7 @@ class Root extends React.Component {
                     e(
                         "h2",
                         {},
-                        questions[currentQuestionIndex].questionText + `
-                        (PUNTI ${questions[currentQuestionIndex].level})`
+                        `${questions[currentQuestionIndex].questionText} (PUNTI ${questions[currentQuestionIndex].level}) [TEMPO ${questions[currentQuestionIndex].time}]`
                     ),
                     e(
                         "form",
@@ -351,38 +356,44 @@ class Root extends React.Component {
                     e(
                         "figure",
                         {
-                            key: this.state.currentQuestionIndex
-                        },
-                        e("figcaption", {
+                            key: this.state.currentQuestionIndex,
                             style: {
-                                color: "var(--base08)",
-                                display: "inline-block",
-                                lineHeight: "var(--width)"
-                            },
-                            id: "countdown-number"
-                        }),
+                                width: width,
+                                height: width
+                            }
+                        },
+                        e(
+                            "figcaption",
+                            {
+                                style: {
+                                    lineHeight: `${width}px`,
+                                    display: "inline-block"
+                                },
+                                id: "countdown-number",
+                            }),
                         e(
                             "svg",
-                            {},
+                            {
+                                style: {
+                                    width: width,
+                                    height: width
+                                }
+                            },
                             e(
                                 "circle",
                                 {
-                                    style: {
-                                        // fill: "none",
-                                        // stroke: "var(--base08)",
-                                        // strokeWidth: "var(--stroke-width)",
-                                        animation: `countdown ${time}s linear infinite forwards`
-                                    },
                                     r: width / 2 - strokeWidth,
                                     cx: width / 2,
                                     cy: width / 2,
+                                    style: {
+                                        strokeDashoffset: strokeDashoffset,
+                                        strokeWidth: strokeWidth,
+                                        strokeDasharray: strokeDasharray
+                                    },
                                 }
-                            ),
-
-
+                            )
                         )
                     )
-
                 ) : e(
                     "div",
                     {},
