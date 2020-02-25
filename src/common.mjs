@@ -23,9 +23,9 @@ function shuffle(array) {
 function send(state, interval) {
     // NOTE: Send data.
     clearInterval(interval);
-    const {scholar, questionsAnswered, id, server} = state;
+    const {scholar, questionsAnswered, server} = state;
     const data = encodeURIComponent(JSON.stringify(questionsAnswered));
-    createBulk(server, id, scholar, data).then(
+    createBulk(server, scholar, data).then(
         response => response.ok ? alert("Submitted!") : alert("Error!")
     ).catch(err => {
         console.log(err);

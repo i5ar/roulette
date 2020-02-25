@@ -14,8 +14,6 @@ class Root extends React.Component {
             isDebug: true,
             server: backend + "/graphql/",
             admin: backend + "/admin/",
-            unit: "",
-            id: "",  // quiz id
             time: 0,
             isReady: false,
             isComplete: false,
@@ -27,7 +25,8 @@ class Root extends React.Component {
                 //     surname: "",
                 //     grade: "",
                 //     section: "",
-                //     unitId: ""
+                //     unitId: "",
+                //     unitName: "",
             },
             quizzes: [],
             questionsAnswered: [
@@ -50,7 +49,8 @@ class Root extends React.Component {
                 surname: "Rossi",
                 grade: "5",
                 section: "B",
-                unitId: ""
+                unitId: "",
+                unitName: ""
             } : {}
         }));
 
@@ -106,14 +106,17 @@ class Root extends React.Component {
         if (name === "question") {
             this.nextQuestion();
         } else if (name === "scholar") {
-            retrieveQuiz(this.state.server, this.state.id).then(
+            retrieveQuiz(this.state.server, this.state.scholar.unitId).then(
                 response => response.json().then(
                     query => this.setState(prevState => ({
                         questions: query.data.quiz.questions,
-                        unit: query.data.quiz.unit,
-                        id: query.data.quiz.id,
                         time: query.data.quiz.questions[
                             prevState.currentQuestionIndex].time,
+                        scholar: {
+                            ...prevState.scholar,
+                            unitId: query.data.quiz.id,
+                            unitName: query.data.quiz.unit,
+                        },
                         isReady: !prevState.isReady,
                     }), () => this.interval = setInterval(() => this.setState(
                             prevState => ({
@@ -177,7 +180,6 @@ class Root extends React.Component {
             isReady,
             scholar,
             quizzes,
-            id,
             questions,
             currentAnswers,
             currentQuestionIndex
@@ -294,12 +296,13 @@ class Root extends React.Component {
                                     this.setState(prevState => ({
                                         scholar: {
                                             ...prevState.scholar,
-                                            unitId: value || null
-                                        },
-                                        id: value || null
+                                            unitId: value || null,
+                                            unitName: prevState.quizzes.find(
+                                                quiz => quiz.id == value).unit || null
+                                        }
                                     }))
                                 },
-                                value: id || null,
+                                value: scholar.unitId || null,
                                 required: true
                             },
                             e("option", {value: null}, ""),
