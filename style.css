@@ -74,8 +74,6 @@ section input[type=text] {
 }
 
 button {
-    margin: 0 auto;
-    display: block;
     padding: 0.4rem;
 }
 

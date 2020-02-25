@@ -1,3 +1,5 @@
+import {createBulk} from "./service.mjs";
+
 // Knuth Shuffle - Daplie Labs
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
@@ -18,6 +20,18 @@ function shuffle(array) {
     return array;
 }
 
+function send(state, interval) {
+    // NOTE: Send data.
+    clearInterval(interval);
+    const {scholar, questionsAnswered, id, server} = state;
+    const data = encodeURIComponent(JSON.stringify(questionsAnswered));
+    createBulk(server, id, scholar, data).then(
+        response => response.ok ? alert("Submitted!") : alert("Error!")
+    ).catch(err => {
+        console.log(err);
+    });
+}
+
 async function download(state) {
     const {questionsAnswered, scholar} = state;
     const fileName = "file";
@@ -32,4 +46,4 @@ async function download(state) {
     document.body.removeChild(link);
 }
 
-export {shuffle, download};
+export {shuffle, send, download};

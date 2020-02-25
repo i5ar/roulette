@@ -2,15 +2,18 @@ import Checkbox from "./src/checkbox.mjs";
 import Submit from "./src/submit.mjs";
 import Text from "./src/text.mjs";
 
-import {shuffle, download} from "./src/common.mjs";
-import {retrieveQuizzes, retrieveQuiz, createBulk} from "./src/service.mjs";
+import {shuffle, send, download} from "./src/common.mjs";
+import {retrieveQuizzes, retrieveQuiz} from "./src/service.mjs";
+
+const backend = "http://127.0.0.1:8000";
 
 class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isDebug: true,
-            server: "http://127.0.0.1:8000/graphql/",
+            server: backend + "/graphql/",
+            admin: backend + "/admin/",
             unit: "",
             id: "",  // quiz id
             time: 0,
@@ -24,6 +27,7 @@ class Root extends React.Component {
                 //     surname: "",
                 //     grade: "",
                 //     section: "",
+                //     unitId: ""
             },
             quizzes: [],
             questionsAnswered: [
@@ -45,7 +49,8 @@ class Root extends React.Component {
                 name: "Mario",
                 surname: "Rossi",
                 grade: "5",
-                section: "B"
+                section: "B",
+                unitId: ""
             } : {}
         }));
 
@@ -101,23 +106,22 @@ class Root extends React.Component {
         if (name === "question") {
             this.nextQuestion();
         } else if (name === "scholar") {
-            retrieveQuiz(this.state.server, this.state.id)
-            .then(
+            retrieveQuiz(this.state.server, this.state.id).then(
                 response => response.json().then(
                     query => this.setState(prevState => ({
                         questions: query.data.quiz.questions,
                         unit: query.data.quiz.unit,
                         id: query.data.quiz.id,
-                        time: query.data.quiz.questions[prevState.currentQuestionIndex].time,
+                        time: query.data.quiz.questions[
+                            prevState.currentQuestionIndex].time,
                         isReady: !prevState.isReady,
                     }), () => this.interval = setInterval(() => this.setState(
                             prevState => ({
                                 time: prevState.time > 0 ? prevState.time - 1 : 0
-                            }),
-                            () => this.state.time <= 0 ?
-                            this.nextQuestion() :
-                            this.countDown(this.state.time)
-                            // console.log(this.state.time)
+                            }), () => this.state.time <= 0 ?
+                                this.nextQuestion() :
+                                this.countDown(this.state.time)
+                                // console.log(this.state.time)
                         ), 1000)
                     )
                 ).catch(err => {
@@ -127,20 +131,6 @@ class Root extends React.Component {
             .catch(err => {
                 console.log(err);
             });
-
-            // fetch('data.json').then(
-            //     response => response.json().then(
-            //         query => this.setState({
-            //             questions: query.data.quiz.questions,
-            //             unit: query.data.quiz.unit
-            //         })
-            //     ).catch(err => {
-            //         console.log(err);
-            //     })
-            // ).catch(err => {
-            //     console.log(err);
-            // });
-
         }
     }
 
@@ -177,16 +167,8 @@ class Root extends React.Component {
                 () => this.countDown(this.state.time)
             );
         } else {
-            clearInterval(this.interval);
             // NOTE: Send data.
-            const {scholar, questionsAnswered, id} = this.state;
-            const data = encodeURIComponent(JSON.stringify(questionsAnswered));
-            createBulk(this.state.server, id, scholar, data)
-            .then(
-                response => response.ok ? alert("Submitted!") : alert("Error!")
-            ).catch(err => {
-                console.log(err);
-            });
+            // send(this.state, this.interval);
         }
     }
 
@@ -224,7 +206,7 @@ class Root extends React.Component {
                         onSubmit: (evt) => this.handleSubmit(evt)
                     },
                     e("fieldset", {},
-                        e("legend", {}, "Studente"),
+                        e("legend", {}, "Intestazione"),
                         e("label", {}, "Nome"),
                         e(
                             "input",
@@ -309,7 +291,13 @@ class Root extends React.Component {
                             {
                                 onChange: evt => {
                                     const value = evt.target.value;
-                                    this.setState({id: value || null})
+                                    this.setState(prevState => ({
+                                        scholar: {
+                                            ...prevState.scholar,
+                                            unitId: value || null
+                                        },
+                                        id: value || null
+                                    }))
                                 },
                                 value: id || null,
                                 required: true
@@ -321,6 +309,7 @@ class Root extends React.Component {
                         ),
                         e(Submit)
                     ),
+                    e("p", {}, e("a", {href: this.state.admin}, "Pannello Admin"))
                 ) : currentQuestionIndex < questions.length ? e(
                     "section",
                     {},
@@ -366,8 +355,7 @@ class Root extends React.Component {
                             "figcaption",
                             {
                                 style: {
-                                    lineHeight: `${width}px`,
-                                    display: "inline-block"
+                                    lineHeight: `${width}px`
                                 },
                                 id: "countdown-number",
                             }),
@@ -396,12 +384,26 @@ class Root extends React.Component {
                     )
                 ) : e(
                     "div",
-                    {},
+                    {
+                        style: {
+                            textAlign: "center"
+                        }
+                    },
                     e("p", {}, "Hai finito!"),
                     e("button", {
+                        onClick: () => send(this.state, this.interval)
+                    }, "Invia"),
+                    e("button", {
                         onClick: () => download(this.state)
-                    }, "Scarica")
-                )
+                    }, "Scarica"),
+                    e("div", {
+                        style: {
+                            padding: 24
+                        }
+                    }, e("a", {
+                        href: "/"
+                    }, "Back home"))
+                ),
             )
         )
     }
