@@ -1,9 +1,9 @@
-import Checkbox from "./src/checkbox.mjs";
-import Submit from "./src/submit.mjs";
-import Text from "./src/text.mjs";
+import Checkbox from "./components/checkbox.mjs";
+import Submit from "./components/submit.mjs";
+import Text from "./components/text.mjs";
 
-import {shuffle, send, download} from "./src/common.mjs";
-import {retrieveQuizzes, retrieveQuiz} from "./src/service.mjs";
+import {shuffle, send, download} from "./common.mjs";
+import {retrieveQuizzes, retrieveQuiz} from "./service.mjs";
 
 const backend = "http://127.0.0.1:8000";
 
