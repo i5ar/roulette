@@ -27,6 +27,8 @@ class Root extends React.Component {
                 //     section: "",
                 //     unitId: "",
                 //     unitName: "",
+                //     userId: "",
+                //     userUsername: "",
             },
             quizzes: [],
             questionsAnswered: [
@@ -50,7 +52,9 @@ class Root extends React.Component {
                 grade: "5",
                 section: "B",
                 unitId: "",
-                unitName: ""
+                unitName: "",
+                userId: "",
+                userUsername: ""
             } : {}
         }));
 
@@ -116,6 +120,8 @@ class Root extends React.Component {
                             ...prevState.header,
                             unitId: query.data.quiz.id,
                             unitName: query.data.quiz.name,
+                            userId: query.data.quiz.user.id,
+                            userUsername: query.data.quiz.user.username,
                         },
                         isReady: !prevState.isReady,
                     }), () => this.interval = setInterval(() => this.setState(
@@ -165,7 +171,7 @@ class Root extends React.Component {
                     currentQuestionIndex: prevState.currentQuestionIndex + 1,
                     currentAnswers: [],
                     isComplete: prevState.currentQuestionIndex + 1 >= prevState.questions.length,
-                    time: prevState.questions[prevState.currentQuestionIndex + 1] ? prevState.questions[prevState.currentQuestionIndex + 1].time : 0
+                    time: prevState.questions[prevState.currentQuestionIndex + 1]?.time || 0
                 }),
                 () => this.countDown(this.state.time)
             );
@@ -296,9 +302,9 @@ class Root extends React.Component {
                                     this.setState(prevState => ({
                                         header: {
                                             ...prevState.header,
-                                            unitId: value || null,
+                                            unitId: value || "",
                                             unitName: prevState.quizzes.find(
-                                                quiz => quiz.id == value).name || null
+                                                quiz => quiz.id == value)?.name || ""
                                         }
                                     }))
                                 },

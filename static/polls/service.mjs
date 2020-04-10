@@ -23,6 +23,10 @@ function retrieveQuiz(server, id) {
             quiz(id: ${id}) {
                 id
                 name
+                user {
+                    id
+                    username
+                }
                 questions {
                     time
                     level
