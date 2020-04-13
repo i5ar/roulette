@@ -3,17 +3,73 @@ import Submit from "./components/submit.mjs";
 import Text from "./components/text.mjs";
 
 import {shuffle, send, download} from "./common.mjs";
-import {retrieveQuizzes, retrieveQuiz} from "./service.mjs";
+import {retrieveUsers, retrieveQuizzes, retrieveQuiz} from "./service.mjs";
 
 const backend = "http://127.0.0.1:8000";
+const server = backend + "/graphql/";
+const admin = backend + "/admin/";
 
 class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            users: [],
+        }
+    }
+
+    componentDidMount() {
+        retrieveUsers(server).then(
+            response => response.json().then(
+                query => this.setState({
+                    users: query.data.users,
+                })
+            ).catch(err => console.log(err))
+        ).catch(err => console.log(err));
+    }
+
+    render() {
+        const {users} = this.state;
+        return e(
+            h,
+            {},
+            e(
+                s,
+                {},
+                e(
+                    r,
+                    {path: "/:id", component: User},
+                ),
+                e(
+                    r,
+                    {path: "/"},
+                    e("h2", {}, "Home"),
+                    e(
+                        "nav",
+                        {},
+                        e(
+                            "ul",
+                            {},
+                            users.map(u => e("li", {}, e(l, {
+                                to: {
+                                    pathname: "/" + u.username,
+                                    state: this.state
+                                }
+                            }, u.username)))
+                        )
+                    ),
+                )
+            )
+        )
+    }
+}
+
+
+class User extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            users: props.location.state?.users,
             isDebug: true,
-            server: backend + "/graphql/",
-            admin: backend + "/admin/",
             time: 0,
             isReady: false,
             isComplete: false,
@@ -59,7 +115,7 @@ class Root extends React.Component {
         }));
 
         window.addEventListener("blur", this.onBlur)
-        retrieveQuizzes(this.state.server).then(
+        retrieveQuizzes(server).then(
             response => response.json().then(
                 query => this.setState({
                     quizzes: query.data.quizzes,
@@ -110,7 +166,7 @@ class Root extends React.Component {
         if (name === "question") {
             this.nextQuestion();
         } else if (name === "header") {
-            retrieveQuiz(this.state.server, this.state.header.unitId).then(
+            retrieveQuiz(server, this.state.header.unitId).then(
                 response => response.json().then(
                     query => this.setState(prevState => ({
                         questions: query.data.quiz.questions,
@@ -177,11 +233,12 @@ class Root extends React.Component {
             );
         } else {
             // NOTE: Send data.
-            // send(this.state, this.interval);
+            // send(server, this.state, this.interval);
         }
     }
 
     render() {
+        // const params = this.props.match.params;
         const {
             isReady,
             header,
@@ -318,7 +375,7 @@ class Root extends React.Component {
                         ),
                         e(Submit)
                     ),
-                    e("p", {}, e("a", {href: this.state.admin}, "Pannello Admin"))
+                    e("p", {}, e("a", {href: admin}, "Pannello Admin"))
                 ) : currentQuestionIndex < questions.length ? e(
                     "section",
                     {},
@@ -400,7 +457,7 @@ class Root extends React.Component {
                     },
                     e("p", {}, "Hai finito!"),
                     e("button", {
-                        onClick: () => send(this.state, this.interval)
+                        onClick: () => send(server, this.state, this.interval)
                     }, "Invia"),
                     e("button", {
                         onClick: () => download(this.state)

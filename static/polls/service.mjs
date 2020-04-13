@@ -1,3 +1,18 @@
+function retrieveUsers(server) {
+    return fetch(server, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({query: `{
+            users {
+                id
+                username
+            }
+        }`})
+    })
+}
+
 function retrieveQuizzes(server) {
     return fetch(server, {
         method: 'POST',
@@ -64,4 +79,4 @@ function createBulk(server, header, data) {
     })
 }
 
-export {retrieveQuizzes, retrieveQuiz, createBulk};
+export {retrieveUsers, retrieveQuizzes, retrieveQuiz, createBulk};
