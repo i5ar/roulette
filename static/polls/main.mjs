@@ -38,11 +38,25 @@ class Root extends React.Component {
                 {},
                 e(
                     Route,
-                    {path: "/:id", component: User},
+                    {
+                        path: "/:id",
+                        // component: User
+                        // https://stackoverflow.com/questions/41466055/
+                        component: props => e(User, {
+                            ...props,
+                            // NOTE: Override location state when connecting directly to `/#/user`
+                            location: {
+                                ...props.location,
+                                state: {...this.state}
+                            }
+                        })
+                    }
                 ),
                 e(
                     Route,
-                    {path: "/"},
+                    {
+                        path: "/",
+                    },
                     e("h2", {}, "Home"),
                     e(
                         "nav",
@@ -57,7 +71,7 @@ class Root extends React.Component {
                                 }
                             }, u.username)))
                         )
-                    ),
+                    )
                 )
             )
         )
@@ -69,8 +83,6 @@ class User extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            users: props.location.state?.users,
-            isClient: props.location.state?.isClient,
             isDebug: true,
             time: 0,
             isReady: false,
@@ -101,14 +113,15 @@ class User extends React.Component {
     }
 
     componentDidMount() {
+        const {isClient} = this.props.location.state;
 
         // Debug
         this.setState(prevState => ({
             header: prevState.isDebug ? {
-                name: "Mario",
-                surname: "Rossi",
-                grade: "5",
-                section: "B",
+                name: !isClient && "Mario",
+                surname: !isClient && "Rossi",
+                grade: !isClient && "5",
+                section: !isClient && "B",
                 unitId: "",
                 unitName: "",
                 userId: "",
@@ -117,7 +130,7 @@ class User extends React.Component {
         }));
 
         window.addEventListener("blur", this.onBlur)
-        retrieveQuizzes(server, this.state.isClient).then(
+        retrieveQuizzes(server, isClient).then(
             response => response.json().then(
                 query => this.setState({
                     quizzes: query.data.quizzes,
@@ -164,11 +177,12 @@ class User extends React.Component {
 
     handleSubmit(evt) {
         evt.preventDefault();
+        const {isClient} = this.props.location.state;
         const name = evt.target.name;
         if (name === "question") {
             this.nextQuestion();
         } else if (name === "header") {
-            retrieveQuiz(server, this.state.header.unitId, this.state.isClient).then(
+            retrieveQuiz(server, this.state.header.unitId, isClient).then(
                 response => response.json().then(
                     query => this.setState(prevState => ({
                         questions: query.data.quiz.questions,
@@ -242,6 +256,9 @@ class User extends React.Component {
     render() {
         // const params = this.props.match.params;
         const {
+            isClient
+        } = this.props.location.state;
+        const {
             isReady,
             header,
             quizzes,
@@ -289,7 +306,7 @@ class User extends React.Component {
                                     }))
                                 },
                                 value: header.name || "",
-                                required: true
+                                required: isClient ? false : true
                             }
                         ),
                         e("label", {}, "Cognome"),
@@ -307,7 +324,7 @@ class User extends React.Component {
                                     }))
                                 },
                                 value: header.surname || "",
-                                required: true
+                                required: isClient ? false : true
                             }
                         ),
                         e("label", {}, "Anno"),
@@ -324,7 +341,7 @@ class User extends React.Component {
                                     }))
                                 },
                                 value: header.grade || "",
-                                required: true
+                                required: isClient ? false : true
                             },
                             e("option", {value: null}, ""),
                             grades.map(c => e("option", {
@@ -345,7 +362,7 @@ class User extends React.Component {
                                     }))
                                 },
                                 value: header.section || "",
-                                required: true
+                                required: isClient ? false : true
                             },
                             e("option", {value: null}, ""),
                             sections.map(c => e("option", {
@@ -377,7 +394,7 @@ class User extends React.Component {
                         ),
                         e(Submit)
                     ),
-                    !this.state.isClient && e("p", {}, e("a", {href: admin}, "Pannello Admin"))
+                    !isClient && e("p", {}, e("a", {href: admin}, "Pannello Admin"))
                 ) : currentQuestionIndex < questions.length ? e(
                     "section",
                     {},
@@ -458,7 +475,7 @@ class User extends React.Component {
                         }
                     },
                     e("p", {}, "Hai finito!"),
-                    !this.state.isClient && e("button", {
+                    !isClient && e("button", {
                         onClick: () => send(server, this.state, this.interval)
                     }, "Invia"),
                     e("button", {

@@ -1,10 +1,10 @@
 {
-    "data": {
-      "quizzes": [
-        {
-          "id": "1",
-          "name": "quiz"
-        }
-      ]
-    }
+  "data": {
+    "quizzes": [
+      {
+        "id": "1",
+        "name": "Grammatica"
+      }
+    ]
   }
+}

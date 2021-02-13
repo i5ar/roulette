@@ -3,17 +3,12 @@
     "users": [
       {
         "id": "1",
-        "username": "isar",
+        "username": "Pierpaolo",
         "quizSet": [
           {
             "id": "1"
           }
         ]
-      },
-      {
-        "id": "2",
-        "username": "mario",
-        "quizSet": []
       }
     ]
   }
