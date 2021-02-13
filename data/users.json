@@ -1,0 +1,20 @@
+{
+  "data": {
+    "users": [
+      {
+        "id": "1",
+        "username": "isar",
+        "quizSet": [
+          {
+            "id": "1"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "username": "mario",
+        "quizSet": []
+      }
+    ]
+  }
+}

@@ -14,11 +14,12 @@ class Root extends React.Component {
         super(props);
         this.state = {
             users: [],
-        }
+            isClient: true  // NOTE: Use the JSON files instead of the GraphQL.
+        };
     }
 
     componentDidMount() {
-        retrieveUsers(server).then(
+        retrieveUsers(server, this.state.isClient).then(
             response => response.json().then(
                 query => this.setState({
                     users: query.data.users,
@@ -30,17 +31,17 @@ class Root extends React.Component {
     render() {
         const {users} = this.state;
         return e(
-            h,
+            HashRouter,
             {},
             e(
-                s,
+                Switch,
                 {},
                 e(
-                    r,
+                    Route,
                     {path: "/:id", component: User},
                 ),
                 e(
-                    r,
+                    Route,
                     {path: "/"},
                     e("h2", {}, "Home"),
                     e(
@@ -49,7 +50,7 @@ class Root extends React.Component {
                         e(
                             "ul",
                             {},
-                            users.map(u => e("li", {}, e(l, {
+                            users.map(u => e("li", {}, e(Link, {
                                 to: {
                                     pathname: "/" + u.username,
                                     state: this.state
@@ -69,6 +70,7 @@ class User extends React.Component {
         super(props);
         this.state = {
             users: props.location.state?.users,
+            isClient: props.location.state?.isClient,
             isDebug: true,
             time: 0,
             isReady: false,
@@ -115,7 +117,7 @@ class User extends React.Component {
         }));
 
         window.addEventListener("blur", this.onBlur)
-        retrieveQuizzes(server).then(
+        retrieveQuizzes(server, this.state.isClient).then(
             response => response.json().then(
                 query => this.setState({
                     quizzes: query.data.quizzes,
@@ -166,7 +168,7 @@ class User extends React.Component {
         if (name === "question") {
             this.nextQuestion();
         } else if (name === "header") {
-            retrieveQuiz(server, this.state.header.unitId).then(
+            retrieveQuiz(server, this.state.header.unitId, this.state.isClient).then(
                 response => response.json().then(
                     query => this.setState(prevState => ({
                         questions: query.data.quiz.questions,
@@ -262,7 +264,7 @@ class User extends React.Component {
         const sections = ["A", "B"];
 
         return e(
-            f,
+            Fragment,
             {},
             e("div", {},
                 !isReady ? e("form",
@@ -375,7 +377,7 @@ class User extends React.Component {
                         ),
                         e(Submit)
                     ),
-                    e("p", {}, e("a", {href: admin}, "Pannello Admin"))
+                    !this.state.isClient && e("p", {}, e("a", {href: admin}, "Pannello Admin"))
                 ) : currentQuestionIndex < questions.length ? e(
                     "section",
                     {},
@@ -456,7 +458,7 @@ class User extends React.Component {
                         }
                     },
                     e("p", {}, "Hai finito!"),
-                    e("button", {
+                    !this.state.isClient && e("button", {
                         onClick: () => send(server, this.state, this.interval)
                     }, "Invia"),
                     e("button", {

@@ -1,5 +1,9 @@
-function retrieveUsers(server) {
-    return fetch(server, {
+function retrieveUsers(server, isClient) {
+    return isClient ? fetch("data/users.json", {
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }) : fetch(server, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -8,13 +12,20 @@ function retrieveUsers(server) {
             users {
                 id
                 username
+                quizSet {
+                    id
+                }
             }
         }`})
     })
 }
 
-function retrieveQuizzes(server) {
-    return fetch(server, {
+function retrieveQuizzes(server, isClient) {
+    return isClient ? fetch("data/quizzes.json", {
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }) : fetch(server, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -28,8 +39,12 @@ function retrieveQuizzes(server) {
     })
 }
 
-function retrieveQuiz(server, id) {
-    return fetch(server, {
+function retrieveQuiz(server, id, isClient) {
+    return isClient ? fetch("data/quiz.json", {
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }) : fetch(server, {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json',

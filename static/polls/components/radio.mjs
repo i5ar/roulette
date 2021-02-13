@@ -7,7 +7,7 @@ export default class Radio extends React.Component {
         // const {} = this.state;
 
         return e(
-            f,
+            Fragment,
             {},
             e(
                 "label",
@@ -38,7 +38,3 @@ export default class Radio extends React.Component {
         )
     }
 }
-
-
-
-      

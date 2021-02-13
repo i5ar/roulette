@@ -1,0 +1,36 @@
+{
+    "data": {
+      "quiz": {
+        "id": "1",
+        "name": "quiz",
+        "user": {
+          "id": "1",
+          "username": "isar"
+        },
+        "questions": [
+          {
+            "time": 16,
+            "level": 1,
+            "questionText": "domanda aperta",
+            "choiceSet": []
+          },
+          {
+            "time": 16,
+            "level": 1,
+            "questionText": "domanda chiusa",
+            "choiceSet": [
+              {
+                "choiceText": "a"
+              },
+              {
+                "choiceText": "b"
+              },
+              {
+                "choiceText": "c"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
