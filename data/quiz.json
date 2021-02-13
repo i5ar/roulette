@@ -9,26 +9,55 @@
       },
       "questions": [
         {
-          "time": 16,
+          "time": 22,
           "level": 1,
-          "questionText": "domanda aperta",
-          "choiceSet": []
-        },
-        {
-          "time": 16,
-          "level": 1,
-          "questionText": "domanda chiusa",
+          "questionText": "Ca ... a",
           "choiceSet": [
             {
-              "choiceText": "a"
+              "choiceText": "gn"
             },
             {
-              "choiceText": "b"
+              "choiceText": "gni"
             },
             {
-              "choiceText": "c"
+              "choiceText": "ni"
             }
-          ]
+          ],
+          "answerText": "gn"
+        },
+        {
+          "time": 22,
+          "level": 1,
+          "questionText": "Ca ... a",
+          "choiceSet": [
+            {
+              "choiceText": "gn"
+            },
+            {
+              "choiceText": "gni"
+            },
+            {
+              "choiceText": "ni"
+            }
+          ],
+          "answerText": "gn"
+        },
+        {
+          "time": 22,
+          "level": 1,
+          "questionText": "Ca ... a",
+          "choiceSet": [
+            {
+              "choiceText": "gn"
+            },
+            {
+              "choiceText": "gni"
+            },
+            {
+              "choiceText": "ni"
+            }
+          ],
+          "answerText": "gn"
         }
       ]
     }

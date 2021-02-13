@@ -64,7 +64,9 @@ class Root extends React.Component {
                         e(
                             "ul",
                             {},
-                            users.map(u => e("li", {}, e(Link, {
+                            users.map((u, i) => e("li", {
+                                key: i
+                            }, e(Link, {
                                 to: {
                                     pathname: "/" + u.username,
                                     state: this.state
@@ -344,7 +346,8 @@ class User extends React.Component {
                                 required: isClient ? false : true
                             },
                             e("option", {value: null}, ""),
-                            grades.map(c => e("option", {
+                            grades.map((c, i) => e("option", {
+                                key: i,
                                 value: c
                             }, c))
                         ),
@@ -365,7 +368,8 @@ class User extends React.Component {
                                 required: isClient ? false : true
                             },
                             e("option", {value: null}, ""),
-                            sections.map(c => e("option", {
+                            sections.map((c, i) => e("option", {
+                                key: i,
                                 value: c
                             }, c))
                         ),
@@ -384,11 +388,12 @@ class User extends React.Component {
                                         }
                                     }))
                                 },
-                                value: header.unitId || null,
+                                value: header.unitId || "",
                                 required: true
                             },
                             e("option", {value: null}, ""),
                             quizzes.map(c => e("option", {
+                                key: c.id,
                                 value: c.id
                             }, c.name))
                         ),

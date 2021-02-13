@@ -11,7 +11,9 @@ export default class Checkbox extends React.Component {
     render() {
         return this.props.choiceSet.map((answer, i) => e(
                 "label",
-                {},
+                {
+                    key: i
+                },
                 e(
                     "input",
                     {
